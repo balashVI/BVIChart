@@ -3,6 +3,8 @@
 PolarAreaChartCanvas::PolarAreaChartCanvas(QQuickItem *parent) :
     PieChartCanvas(parent), pAxis{new ChartAxis(this)}
 {
+    pAxis->setOrientation(ChartAxis::AxisOrientation::Vertical);
+    pAxis->setVisibleLabelBackground(true);
     connect(pAxis, SIGNAL(changed()), this, SLOT(update()));
 }
 
@@ -21,70 +23,79 @@ void PolarAreaChartCanvas::paint(QPainter *painter)
         QPointF center = fillRect.center();
         int maxRadius = (fillRect.width()<fillRect.height())?fillRect.width()/2:fillRect.height()*0.5;
         maxRadius-=padding();
-        int labelHeight = 0;
-        if(pAxis->visible()){
-            painter->setFont(pAxis->font());
-            if(pAxis->visibleLabels())
-                labelHeight = painter->fontMetrics().height();
-            if(pAxis->visibleLines()){
-                if(labelHeight)
-                    maxRadius -= (labelHeight>pAxis->lineWidth())?labelHeight/2:pAxis->lineWidth()*0.5;
-                else
-                    maxRadius -= pAxis->lineWidth()*0.5;
+        if(pAxis->visible())
+            maxRadius -= qMax(pAxis->visibleLines()*pAxis->lineWidth(), pAxis->visibleLabels()*pAxis->labelHeight())*0.5;
+
+        pAxis->setLength(maxRadius);
+
+        if(numberOfEnabledSlices){
+            //Змінні для вспливаючих підказок
+            int phi = 0;
+            QString popupTxt;
+            int popupRadius{};
+
+            //Малювання сегментів
+
+            if(pStrokeVisible){
+                QPen pen(pStrokeColor);
+                pen.setWidth(pStrokeWidth);
+                painter->setPen(pen);
             } else
-                maxRadius -= labelHeight*0.5;
+                painter->setPen(QPen(QColor(0,0,0,0)));
+
+            int beginAngle{pAngleOffset+1440};
+            int angleStep = 360*16/numberOfEnabledSlices;
+            int counter{-1};
+            QRectF pieRect;
+            int segmentRadius;
+            for (auto &i: slices) {
+                ++counter;
+                if(!i.enabled)
+                    continue;
+                segmentRadius = i.value*maxRadius/maxDataValue;
+                if(counter == pCurrentSlice){
+                    painter->setBrush(QBrush(i.color.lighter(135)));
+                    if(pPopup->enabled()){
+                        phi = ((int)(beginAngle + angleStep/2)%5760)/16;
+                        popupTxt = i.label+": "+QString::number(i.value);
+                        popupRadius = 0.5*segmentRadius;
+                    }
+
+                } else
+                    painter->setBrush(QBrush(i.color));
+
+                painter->drawPie(QRect(center.x()-segmentRadius, center.y()-segmentRadius, 2*segmentRadius, 2*segmentRadius),
+                                 beginAngle, angleStep);
+                beginAngle += angleStep;
+            }
+
+            //Малювання вспливаючої підказки
+            if(pPopup->enabled() && pCurrentSlice!=-1){
+                int popupPadding = pPopup->padding();
+                painter->setFont(pPopup->font());
+                QRect popupTextRect = painter->fontMetrics().boundingRect(popupTxt);
+                QPoint popupPoint;
+                QPoint popupCenterBottomPoint;
+                popupCenterBottomPoint.setX(center.x()+popupRadius*qCos(phi*pi/180.0));
+                popupCenterBottomPoint.setY(center.y()-popupRadius*qSin(phi*pi/180.0));
+                popupPoint.setX(popupCenterBottomPoint.x() - popupTextRect.width()*0.5-popupPadding);
+                popupPoint.setY(popupCenterBottomPoint.y() - popupTextRect.height()-2*popupPadding-9);
+
+                painter->setBrush(QBrush(pPopup->backgroundColor()));
+                painter->setPen(QPen(QColor(0,0,0,0)));
+                painter->drawRoundedRect(popupPoint.x(), popupPoint.y(), popupTextRect.width()+2*popupPadding,
+                                         popupTextRect.height()+2*popupPadding, 5, 5);
+                QPainterPath triangle;
+                triangle.moveTo(popupCenterBottomPoint);
+                triangle.lineTo(popupCenterBottomPoint.x()-10, popupCenterBottomPoint.y()-9);
+                triangle.lineTo(popupCenterBottomPoint.x()+10, popupCenterBottomPoint.y()-9);
+                triangle.lineTo(popupCenterBottomPoint);
+                painter->drawPath(triangle);
+                painter->setPen(QPen(pPopup->textColor()));
+                painter->drawText(popupPoint.x()+popupPadding, popupPoint.y()+popupPadding-popupTextRect.y(), popupTxt);
+            }
         }
-
-        int maxSteps = qFloor(maxRadius / (labelHeight*0.66));
-        int minSteps = qFloor(maxRadius / labelHeight*0.5);
-
-
-//        //Малювання сегментів
-//        int beginAngle = pAngleOffset;
-//        int segmentAngle;
-//        int angleStep = pi*32/slices.length();
-//        for (int i=0; i<slices.length(); ++i) {
-//            if(!slices.at(i).enabled)
-//                continue;
-//            segmentAngle = (slices.at(i).value/sumSlicesValue) * 5760;
-//            if(i == pCurrentSlice){
-//                //Виділення активного сегмента
-//                painter->setBrush(QBrush(slices.at(i).color.lighter(125)));
-//                painter->drawPie(QRectF(fillRect.x()-7, fillRect.y()-7, fillRect.width()+14, fillRect.height()+14), beginAngle, segmentAngle);
-//                painter->drawArc(fillRect, beginAngle, segmentAngle);
-
-//                //Обчислення даних для вспливаючої підказки
-//                if(pPopup->enabled()){
-//                    phi = ((int)(beginAngle + segmentAngle/2)%5760)/16;
-//                    popupTxt = slices.at(i).label+": "+QString::number(slices.at(i).value);
-//                }
-
-//            } else {
-//                painter->setBrush(QBrush(slices.at(i).color));
-//                painter->drawPie(fillRect, beginAngle, segmentAngle);
-//            }
-//            beginAngle += segmentAngle;
-//        }
-
-
-
-
-//        for (var i=0; i<data.length; i++) {
-
-//            ctx.beginPath();
-//            ctx.arc(width/2,height/2,scaleAnimation * calculateOffset(data[i].value,calculatedScale,scaleHop),startAngle, startAngle + rotateAnimation*angleStep, false);
-//            ctx.lineTo(width/2,height/2);
-//            ctx.closePath();
-//            ctx.fillStyle = data[i].color;
-//            ctx.fill();
-
-//            if(config.segmentShowStroke) {
-//                ctx.strokeStyle = config.segmentStrokeColor;
-//                ctx.lineWidth = config.segmentStrokeWidth;
-//                ctx.stroke();
-//            }
-//            startAngle += rotateAnimation*angleStep;
-//        }
+        drawAxis(painter, center, maxRadius);
     }
 }
 
@@ -93,17 +104,53 @@ void PolarAreaChartCanvas::hoverMoveEvent(QHoverEvent *event)
 
 }
 
-void PolarAreaChartCanvas::paintAxis(QPainter *painter, QPointF &center, int maxRadius)
+void PolarAreaChartCanvas::drawAxis(QPainter *painter, QPointF &center, int maxRadius)
 {
+    painter->setPen(pAxis->getLinePen());
+    if(pAxis->visibleLines()){
+        int radiusSteap = maxRadius/pAxis->numberOfSteps();
+        int currentRadius=0;
+        for(int i=0;i<pAxis->numberOfSteps();++i){
+            currentRadius+=radiusSteap;
+            painter->drawArc(center.x()-currentRadius, center.y()-currentRadius, 2*currentRadius,
+                             2*currentRadius, 0, 360*16);
+        }
+    }
 
+    if(pAxis->visibleLabels()){
+        int radiusSteap = maxRadius/pAxis->numberOfSteps();
+        int currentRadius=0;
+        const QList<QString>& labels = pAxis->labels();
+
+        painter->setFont(pAxis->font());
+        painter->setPen(pAxis->textColor());
+        painter->setBrush(QBrush(pAxis->labelBackgroundColor()));
+        for(int i=0;i<pAxis->numberOfSteps();++i){
+            currentRadius+=radiusSteap;
+            QRectF labelRect = painter->fontMetrics().boundingRect(labels.at(i));
+            labelRect.moveCenter(QPointF(center.x(), center.y()-currentRadius));
+            labelRect += QMargins(pAxis->labelPadding(), pAxis->labelPadding(), pAxis->labelPadding(), pAxis->labelPadding());
+            painter->setPen(QColor(255,255,255,0));
+            painter->drawRoundedRect(labelRect, 3, 3);
+            painter->setPen(pAxis->textColor());
+            painter->drawText(labelRect, Qt::AlignHCenter | Qt::AlignVCenter, labels.at(i));
+        }
+    }
 }
 
 void PolarAreaChartCanvas::sliceChanged()
 {
-    if(slices.length()){
+    numberOfEnabledSlices = 0;
+    for(auto &i: slices)
+        if(i.enabled)
+            ++numberOfEnabledSlices;
+
+    if(numberOfEnabledSlices){
         maxDataValue = slices.at(0).value;
         minDataValue = maxDataValue;
         for(auto &i:slices){
+            if(!i.enabled)
+                continue;
             if(i.value > maxDataValue)
                 maxDataValue = i.value;
             if(i.value < minDataValue)
@@ -114,15 +161,10 @@ void PolarAreaChartCanvas::sliceChanged()
         minDataValue = 10;
     }
 
-    numberOfEnabledSlices = 0;
-    for(auto &i: slices)
-        if(i.enabled)
-            ++numberOfEnabledSlices;
-
     if(acceptHoverEvents()){
         if(pCurrentSlice != -1)
             setCurrentItem(-1);
     }
-
+    pAxis->setMinMaxValues(minDataValue, maxDataValue);
     update();
 }
