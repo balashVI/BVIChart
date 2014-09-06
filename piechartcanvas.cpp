@@ -2,15 +2,9 @@
 #include <QDebug>
 
 PieChartCanvas::PieChartCanvas(QQuickItem *parent)
-    : ChartCanvas(parent)
+    : ChartCanvas(parent), pStrokeVisible{true}, pStrokeWidth{3}, pStrokeColor{QColor(255,255,255)}, pCurrentSlice{-1},
+      pAngleOffset{0}
 {
-    connect(this, SIGNAL(slicesChanged()), this, SLOT(slotSliceChanged()));
-    pStrokeVisible = true;
-    pStrokeColor = QColor("white");
-    pStrokeWidth = 3;
-    pCurrentSlice = -1;
-    pAngleOffset = 0;
-
     setObjectName("PieChartCanvas");
 }
 
@@ -47,24 +41,26 @@ void PieChartCanvas::paint(QPainter *painter)
         //Малювання сегментів
         double beginAngle = pAngleOffset;
         double segmentAngle;
-        for (int i=0; i<slices.length(); ++i) {
-            if(!slices.at(i).enabled)
+        int counter{-1};
+        for (auto &i: slices) {
+            ++counter;
+            if(!i.enabled)
                 continue;
-            segmentAngle = (slices.at(i).value/sumSlicesValue) * 5760;
-            if(i == pCurrentSlice){
+            segmentAngle = (i.value/sumSlicesValue) * 5760;
+            if(counter == pCurrentSlice){
                 //Виділення активного сегмента
-                painter->setBrush(QBrush(slices.at(i).color.lighter(125)));
+                painter->setBrush(QBrush(i.color.lighter(125)));
                 painter->drawPie(QRectF(fillRect.x()-7, fillRect.y()-7, fillRect.width()+14, fillRect.height()+14), beginAngle, segmentAngle);
                 painter->drawArc(fillRect, beginAngle, segmentAngle);
 
                 //Обчислення даних для вспливаючої підказки
                 if(pPopup->enabled()){
                     phi = ((int)(beginAngle + segmentAngle/2)%5760)/16;
-                    popupTxt = slices.at(i).label+": "+QString::number(slices.at(i).value);
+                    popupTxt = i.label+": "+QString::number(i.value);
                 }
 
             } else {
-                painter->setBrush(QBrush(slices.at(i).color));
+                painter->setBrush(QBrush(i.color));
                 painter->drawPie(fillRect, beginAngle, segmentAngle);
             }
             beginAngle += segmentAngle;
@@ -129,13 +125,15 @@ void PieChartCanvas::hoverMoveEvent(QHoverEvent *event)
     alpha = (int)(alpha - pAngleOffset/16) % 360;
     if(alpha<0)
         alpha = 360+alpha;
-    for(int i=0;i<slices.length();++i){
-        if(!slices.at(i).enabled)
+    int counter{-1};
+    for(auto &i: slices){
+        ++counter;
+        if(!i.enabled)
             continue;
-        angle += (slices.at(i).value/sumSlicesValue) * 360;
+        angle += (i.value/sumSlicesValue) * 360;
         if(alpha<angle){
-            if(pCurrentSlice != i){
-                setCurrentItem(i);
+            if(counter != pCurrentSlice){
+                setCurrentItem(counter);
                 update();
                 emit hoverSliceChanged();
             }
@@ -157,6 +155,7 @@ void PieChartCanvas::addSlice(QVariantMap data)
         slice.enabled = data.value("enabled").toBool();
     slices.append(slice);
     emit slicesChanged();
+    sliceChanged();
 }
 
 bool PieChartCanvas::setSliceProperty(int sliceIndex, QVariantMap data)
@@ -172,6 +171,7 @@ bool PieChartCanvas::setSliceProperty(int sliceIndex, QVariantMap data)
             slices[sliceIndex].enabled = data.value("enabled").toBool();
 
         emit slicesChanged();
+        sliceChanged();
         return true;
     } else
         return false;
@@ -182,6 +182,7 @@ bool PieChartCanvas::moveSlice(int from, int to)
     if((from >= 0) && (from < slices.length()) && (to >= 0) && (to < slices.length())){
         slices.move(from, to);
         emit slicesChanged();
+        sliceChanged();
         return true;
     } else
         return false;
@@ -196,6 +197,7 @@ bool PieChartCanvas::removeSlice(int index)
 {
     if((index >= 0) && (index < slices.length())){
         slices.removeAt(index);
+        sliceChanged();
         emit slicesChanged();
         return true;
     } else
@@ -206,6 +208,8 @@ void PieChartCanvas::removeAllSlices()
 {
     slices.clear();
     emit slicesChanged();
+
+
 }
 
 QVariantMap PieChartCanvas::getSlice(int index)
@@ -224,11 +228,11 @@ QVariantList PieChartCanvas::getLegend()
 {
     QVariantList list;
     QVariantMap map;
-    for(int i=0;i<slices.length();++i){
+    for(auto &i: slices){
         map.clear();
-        map.insert("label", slices.at(i).label);
-        map.insert("color", slices.at(i).color);
-        map.insert("enabled", slices.at(i).enabled);
+        map.insert("label", i.label);
+        map.insert("color", i.color);
+        map.insert("enabled", i.enabled);
         list.append(map);
     }
     return list;
@@ -302,12 +306,12 @@ void PieChartCanvas::setAngleOffset(int value)
     emit angleOffsetChanged();
 }
 
-void PieChartCanvas::slotSliceChanged()
+void PieChartCanvas::sliceChanged()
 {
     sumSlicesValue = 0;
-    for(int i=0;i<slices.length();++i)
-        if(slices.at(i).enabled)
-            sumSlicesValue += slices.at(i).value;
+    for(auto &i: slices)
+        if(i.enabled)
+            sumSlicesValue += i.value;
     if(acceptHoverEvents()){
         if(pCurrentSlice != -1)
             setCurrentItem(-1);

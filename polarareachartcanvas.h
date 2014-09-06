@@ -13,13 +13,19 @@ public:
     Q_PROPERTY(ChartAxis *axis READ axis)
     ChartAxis *axis() const;
 
-private:
-    void paint(QPainter *painter);
+protected:
+    void paint(QPainter *painter) override;
+    void hoverMoveEvent(QHoverEvent * event) override;
+    void sliceChanged() override;
+    void paintAxis(QPainter *painter, QPointF &center, int maxRadius);
     ChartAxis *pAxis;
+
+    double maxDataValue, minDataValue;
+    int numberOfEnabledSlices;
 
 signals:
 
-public slots:
+private slots:
 
 };
 

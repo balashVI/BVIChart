@@ -13,28 +13,25 @@ public:
     explicit ChartCanvas(QQuickItem *parent = 0);
 
     Q_PROPERTY(int padding READ padding WRITE setPadding NOTIFY paddingChanged)
+    Q_PROPERTY(bool pausePainting READ pausePainting WRITE setPausePainting NOTIFY pausePaintingChanged)
+    Q_PROPERTY(bool hoverEventsEnabled READ hoverEventsEnabled WRITE setHoverEventsEnabled NOTIFY hoverEventsEnabledChanged)
+    Q_PROPERTY(ChartPopup *popup READ popup)
+
     int padding() const;
     void setPadding(int value);
-
-    Q_PROPERTY(bool pausePainting READ pausePainting WRITE setPausePainting NOTIFY pausePaintingChanged)
     bool pausePainting() const;
     void setPausePainting(bool value);
-
-    Q_PROPERTY(bool hoverEventsEnabled READ hoverEventsEnabled WRITE setHoverEventsEnabled NOTIFY hoverEventsEnabledChanged)
     bool hoverEventsEnabled() const;
     void setHoverEventsEnabled(bool value);
-
-    Q_PROPERTY(ChartPopup *popup READ popup)
     ChartPopup* popup() const;
 
 protected:
-    void paint(QPainter *painter);
+    ChartPopup *pPopup;
     double pi;
-
     int pPadding;
     bool pPausePainting;
     bool pHoverEventsEnabled;
-    ChartPopup *pPopup;
+
 
 signals:
     void paddingChanged();

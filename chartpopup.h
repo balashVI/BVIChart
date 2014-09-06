@@ -14,25 +14,21 @@ public:
     Q_INVOKABLE void changeFont(QVariantMap &value);
 
     Q_PROPERTY(QFont font READ font NOTIFY fontChanged)
-    QFont font() const;
-
     Q_PROPERTY(int padding READ padding WRITE setPadding NOTIFY paddingChanged)
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
+    Q_PROPERTY(double backgroundOpacity READ backgroundOpacity WRITE setBackgroundOpacity NOTIFY backgroundOpacityChanged)
+    Q_PROPERTY(QColor textColor READ textColor WRITE setTextColor NOTIFY textColorChanged)
+
+    QFont font() const;
     int padding() const;
     void setPadding(int value);
-
-    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     bool enabled() const;
     void setEnabled(bool value);
-
-    Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
     QColor backgroundColor() const;
     void setBackgroundColor(QColor &value);
-
-    Q_PROPERTY(double backgroundOpacity READ backgroundOpacity WRITE setBackgroundOpacity NOTIFY backgroundOpacityChanged)
     double backgroundOpacity() const;
     void setBackgroundOpacity(double value);
-
-    Q_PROPERTY(QColor textColor READ textColor WRITE setTextColor NOTIFY textColorChanged)
     QColor textColor() const;
     void setTextColor(QColor &value);
 

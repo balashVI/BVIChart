@@ -2,14 +2,9 @@
 #include "charttoolkit.h"
 
 ChartPopup::ChartPopup(QObject *parent) :
-    QObject(parent)
+    QObject(parent), pPadding{6}, pEnabled{true}, pBackgroundColor{QColor(0,0,0,200)}, pTextColor{QColor(255,255,255)}
 {
     pFont.setPointSize(11);
-    pPadding = 6;
-    pEnabled = true;
-    pBackgroundColor.setRgb(0,0,0);
-    pBackgroundColor.setAlpha(200);
-    pTextColor.setRgb(255,255,255);
 }
 
 QFont ChartPopup::font() const

@@ -3,6 +3,8 @@ TARGET = Charts
 QT += qml quick
 CONFIG += qt plugin
 
+QMAKE_CXXFLAGS += -std=c++11
+
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = BVI.Charts
 

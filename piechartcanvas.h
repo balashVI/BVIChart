@@ -20,30 +20,26 @@ public:
     Q_INVOKABLE QVariantList getLegend();
 
     Q_PROPERTY(bool strokeVisible READ strokeVisible WRITE setStrokeVisible NOTIFY strokeVisibleChanged)
+    Q_PROPERTY(int strokeWidth READ strokeWidth WRITE setStrokeWidth NOTIFY strokeWidthChanged)
+    Q_PROPERTY(QColor strokeColor READ strokeColor WRITE setStrokeColor NOTIFY strokeColorChanged)
+    Q_PROPERTY(int currentItem READ currentItem WRITE setCurrentItem NOTIFY currentItemChanged)
+    Q_PROPERTY(int angleOffset READ angleOffset WRITE setAngleOffset NOTIFY angleOffsetChanged)
+
     bool strokeVisible() const;
     void setStrokeVisible(bool value);
-
-    Q_PROPERTY(int strokeWidth READ strokeWidth WRITE setStrokeWidth NOTIFY strokeWidthChanged)
     int strokeWidth() const;
     void setStrokeWidth(int value);
-
-    Q_PROPERTY(QColor strokeColor READ strokeColor WRITE setStrokeColor NOTIFY strokeColorChanged)
     QColor strokeColor() const;
     void setStrokeColor(QColor value);
-
-    Q_PROPERTY(int currentItem READ currentItem WRITE setCurrentItem NOTIFY currentItemChanged)
     int currentItem() const;
     void setCurrentItem(int value);
-
-    Q_PROPERTY(int angleOffset READ angleOffset WRITE setAngleOffset NOTIFY angleOffsetChanged)
     int angleOffset() const;
     void setAngleOffset(int value);
 
-
-
-private:
-    void paint(QPainter *painter);
-    void hoverMoveEvent(QHoverEvent * event);
+protected:
+    virtual void paint(QPainter *painter);
+    virtual void hoverMoveEvent(QHoverEvent * event);
+    virtual void sliceChanged();
 
     struct pieSlice{
         QString label;
@@ -77,7 +73,7 @@ signals:
     void angleOffsetChanged();
 
 private slots:
-    void slotSliceChanged();
+
 };
 
 #endif // PieChartCanvas_H

@@ -1,20 +1,12 @@
 #include "chartcanvas.h"
 
 ChartCanvas::ChartCanvas(QQuickItem *parent) :
-    QQuickPaintedItem(parent), pPopup{new ChartPopup(this)}
+    QQuickPaintedItem(parent), pPopup{new ChartPopup(this)}, pi{qAcos(-1)}, pPadding{7}, pPausePainting{false},
+    pHoverEventsEnabled{true}
 {
-    pi = qAcos(-1);
-    pPadding = 7;
-    pPausePainting = false;
-    pHoverEventsEnabled = true;
     setAcceptHoverEvents(true);
 
     connect(pPopup, SIGNAL(changed()), this, SLOT(update()));
-}
-
-void ChartCanvas::paint(QPainter *painter)
-{
-
 }
 
 int ChartCanvas::padding() const
