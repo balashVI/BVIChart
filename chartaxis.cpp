@@ -5,13 +5,14 @@
 
 ChartAxis::ChartAxis(QObject *parent):
     QObject(parent), pVisible{true}, pVisibleLabels{true}, pAutomated{true}, pVisibleLines{true},
-    pTextColor{QColor(0,0,0)}, pVisibleLabelBackground{false}, pLabelBackgroundColor{QColor(255,255,255,150)},
-    pLabelPadding{3}, mOrientation{AxisOrientation::Horizontal}, mLength{0}
+    pTextColor{QColor(0,0,0)}, pVisibleLabelBackground{false}, pLabelBackgroundColor{QColor(250,250,250,200)},
+    pLabelPadding{3}, pInvert{false}, pFixedMin{false}, pFixedMax{false}, pMin{0}, pMax{10},
+    mOrientation{AxisOrientation::Horizontal}, mLength{0}
 {
-    pFont.setPointSize(11);
+    pFont.setPointSize(10);
     linePen.setWidth(1);
-    linePen.setColor(QColor(170,170,170, 200));
-    update();
+    linePen.setColor(QColor(150,150,150, 200));
+    linePen.setStyle(Qt::DotLine);
 }
 
 void ChartAxis::setOrientation(int value)
@@ -24,7 +25,7 @@ const QPen &ChartAxis::getLinePen() const
     return linePen;
 }
 
-int ChartAxis::labelHeight()
+int ChartAxis::labelHeight() const
 {
     return mLabelHeight;
 }
@@ -45,12 +46,25 @@ const QList<QString> &ChartAxis::labels()
     return mLabels;
 }
 
+int ChartAxis::convertValue(double value) const
+{
+    if(pInvert)
+        return (value-maxPaintedValue)/(minPaintedValue-maxPaintedValue)*mLength;
+    else
+        return (value-minPaintedValue)/(maxPaintedValue-minPaintedValue)*mLength;
+}
+
 void ChartAxis::setLength(int value)
 {
-    if(value<10)
-        return;
-    mLength = value;
-    update();
+    if(value>0){
+        mLength = value;
+        update();
+    }
+}
+
+int ChartAxis::length() const
+{
+    return mLength;
 }
 
 void ChartAxis::changeFont(QVariantMap &value)
@@ -58,6 +72,66 @@ void ChartAxis::changeFont(QVariantMap &value)
     ChartToolkit::variantMapToFont(pFont, value);
     emit changed();
     emit fontChanged();
+}
+
+void ChartAxis::setMax(double value)
+{
+    pMax = value;
+    emit maxChanged();
+    emit changed();
+}
+
+double ChartAxis::max() const
+{
+    return pMax;
+}
+
+void ChartAxis::setFixedMax(bool value)
+{
+    pFixedMax = value;
+    emit fixedMaxChanged();
+    emit changed();
+}
+
+bool ChartAxis::fixedMax() const
+{
+    return pFixedMax;
+}
+
+void ChartAxis::setMin(double value)
+{
+    pMin = value;
+    emit minChanged();
+    emit changed();
+}
+
+double ChartAxis::min() const
+{
+    return pMin;
+}
+
+void ChartAxis::setFixedMin(bool value)
+{
+    pFixedMin = value;
+    emit fixedMinChanged();
+    emit changed();
+}
+
+bool ChartAxis::fixedMin() const
+{
+    return pFixedMin;
+}
+
+void ChartAxis::setInvert(bool value)
+{
+    pInvert = value;
+    emit changed();
+    emit invertChanged();
+}
+
+bool ChartAxis::invert() const
+{
+    return pInvert;
 }
 
 void ChartAxis::setLabelPadding(unsigned int value)
@@ -209,7 +283,7 @@ double ChartAxis::lineOpacity() const
 
 void ChartAxis::setLineOpacity(double value)
 {
-    QColor color = linePen.color();
+    QColor color {linePen.color()};
     color.setAlpha(value*255);
     linePen.setColor(color);
     emit lineOpacityChanged();
@@ -232,8 +306,9 @@ void ChartAxis::update()
 {
     QFontMetrics metrics(pFont);
     mLabelHeight = metrics.height();
-    if(visibleLabelBackground())
+    if(pVisibleLabelBackground)
         mLabelHeight+=2*pLabelPadding;
+
     int maxSteps;
     int minSteps;
 
@@ -245,14 +320,19 @@ void ChartAxis::update()
         minSteps=0;
     }
 
-    double valueRange = maxValue - minValue;
-    double rangeOrderOfMagnitude = qPow(10, calculateOrderOfMagnitude(valueRange));
-    double graphMin = qFloor(minValue / rangeOrderOfMagnitude) * rangeOrderOfMagnitude;
-    double graphMax = qCeil(maxValue / rangeOrderOfMagnitude) * rangeOrderOfMagnitude;
-    double graphRange = graphMax - graphMin;
-    double stepValue = rangeOrderOfMagnitude;
+    double valueRange {maxValue - minValue};
+    double rangeOrderOfMagnitude {qPow(10, calculateOrderOfMagnitude(valueRange))};
+    if(pFixedMin)
+        minPaintedValue = pMin;
+    else
+        minPaintedValue = qFloor(minValue / rangeOrderOfMagnitude) * rangeOrderOfMagnitude;
+    if(pFixedMax)
+        maxPaintedValue = pMax;
+    else
+        maxPaintedValue = qCeil(maxValue / rangeOrderOfMagnitude) * rangeOrderOfMagnitude;
+    double graphRange {maxPaintedValue - minPaintedValue};
+    double stepValue {rangeOrderOfMagnitude};
     mNumberOfSteps = qRound(graphRange / stepValue);
-
     while(mNumberOfSteps < minSteps || mNumberOfSteps > maxSteps) {
         if (mNumberOfSteps < minSteps) {
             stepValue /= 2;
@@ -262,10 +342,18 @@ void ChartAxis::update()
             mNumberOfSteps = qRound(graphRange/stepValue);
         }
     }
-
+    if(pFixedMax || pFixedMin)
+        stepValue = graphRange/mNumberOfSteps;
+    if(!mNumberOfSteps)
+        mNumberOfSteps=1;
+    mLength = qFloor(mLength/mNumberOfSteps)*mNumberOfSteps;
     mLabels.clear();
-    for (int i=1; i<=mNumberOfSteps; ++i)
-        mLabels.append(QString::number(graphMin + (stepValue * i)));
+    if(pInvert)
+        for (int i=mNumberOfSteps-1; i>=0; --i)
+            mLabels.append(QString::number(minPaintedValue + (stepValue * i)));
+    else
+        for (int i=1; i<=mNumberOfSteps; ++i)
+            mLabels.append(QString::number(minPaintedValue + (stepValue * i)));
 }
 
 double ChartAxis::calculateOrderOfMagnitude(double value)

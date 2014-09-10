@@ -17,7 +17,8 @@ protected:
     void paint(QPainter *painter) override;
     void hoverMoveEvent(QHoverEvent * event) override;
     void sliceChanged() override;
-    void drawAxis(QPainter *painter, QPointF &center, int maxRadius);
+    void drawAxis(QPainter *painter, QPointF &center);
+
     ChartAxis *pAxis;
 
     double maxDataValue, minDataValue;

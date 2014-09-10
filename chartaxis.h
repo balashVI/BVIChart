@@ -19,10 +19,12 @@ public:
     void setOrientation(int value);
     const QPen& getLinePen() const;
     void setLength(int value);
-    int labelHeight();
+    int length() const;
+    int labelHeight() const;
     void setMinMaxValues(double min, double max);
     int numberOfSteps() const;
     const QList<QString>& labels();
+    int convertValue(double value) const;
 
     //*********************************************
     // Qml методи
@@ -48,7 +50,22 @@ public:
     Q_PROPERTY(QColor labelBackgroundColor READ labelBackgroundColor WRITE setLabelBackgroundColor NOTIFY labelBackgroundColorChanged)
     Q_PROPERTY(double labelBackgroundOpacity READ labelBackgroundOpacity WRITE setLabelBackgroundOpacity NOTIFY labelBackgroundOpacityChanged)
     Q_PROPERTY(unsigned int labelPadding READ labelPadding WRITE setLabelPadding NOTIFY labelPaddingChanged)
+    Q_PROPERTY(bool invert READ invert WRITE setInvert NOTIFY invertChanged)
+    Q_PROPERTY(bool fixedMin READ fixedMin WRITE setFixedMin NOTIFY fixedMinChanged)
+    Q_PROPERTY(double min READ min WRITE setMin NOTIFY minChanged)
+    Q_PROPERTY(bool fixedMax READ fixedMax WRITE setFixedMax NOTIFY fixedMaxChanged)
+    Q_PROPERTY(double max READ max WRITE setMax NOTIFY maxChanged)
 
+    void setMax(double value);
+    double max() const;
+    void setFixedMax(bool value);
+    bool fixedMax() const;
+    void setMin(double value);
+    double min() const;
+    void setFixedMin(bool value);
+    bool fixedMin() const;
+    void setInvert(bool value);
+    bool invert() const;
     void setLabelPadding(unsigned int value);
     unsigned int labelPadding() const;
     void setLabelBackgroundOpacity(double value);
@@ -94,6 +111,11 @@ private:
     bool pVisibleLabelBackground;
     QColor pLabelBackgroundColor;
     unsigned int pLabelPadding;
+    bool pInvert;
+    bool pFixedMin;
+    bool pFixedMax;
+    double pMin;
+    double pMax;
 
     int mOrientation;
     int mLength;
@@ -101,6 +123,8 @@ private:
     double maxValue, minValue;
     int mNumberOfSteps;
     QList <QString> mLabels;
+    double minPaintedValue;
+    double maxPaintedValue;
 
     void update();
     double calculateOrderOfMagnitude(double value);
@@ -121,6 +145,11 @@ signals:
     void labelBackgroundColorChanged();
     void labelBackgroundOpacityChanged();
     void labelPaddingChanged();
+    void invertChanged();
+    void fixedMinChanged();
+    void minChanged();
+    void fixedMaxChanged();
+    void maxChanged();
 
 public slots:
 

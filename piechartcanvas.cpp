@@ -14,7 +14,7 @@ void PieChartCanvas::paint(QPainter *painter)
         painter->setRenderHints(QPainter::Antialiasing, true);
 
         //Обчислення області для малювання
-        QRectF fillRect = contentsBoundingRect();
+        QRectF fillRect {contentsBoundingRect()};
         if(fillRect.height() > fillRect.width()){
             fillRect.setX(fillRect.x() + pPadding + pStrokeWidth);
             fillRect.setY(fillRect.y() + (fillRect.height()-fillRect.width())/2+pPadding);
@@ -39,8 +39,8 @@ void PieChartCanvas::paint(QPainter *painter)
         QString popupTxt;
 
         //Малювання сегментів
-        double beginAngle = pAngleOffset;
-        double segmentAngle;
+        int beginAngle {pAngleOffset};
+        int segmentAngle;
         int counter{-1};
         for (auto &i: slices) {
             ++counter;
@@ -68,50 +68,44 @@ void PieChartCanvas::paint(QPainter *painter)
 
         //Малювання вспливаючої підказки
         if(pPopup->enabled() && pCurrentSlice!=-1){
-            int popupPadding = pPopup->padding();
             painter->setFont(pPopup->font());
-            QRect popupTextRect = painter->fontMetrics().boundingRect(popupTxt);
-            QPoint popupPoint;
-            QPoint popupCenterBottomPoint;
+            QRectF popupTextRect{painter->fontMetrics().boundingRect(popupTxt)};
+            popupTextRect += QMargins(pPopup->padding(), pPopup->padding(), pPopup->padding(), pPopup->padding());
             int r = fillRect.width()/4.0;
-            popupCenterBottomPoint.setX(fillRect.center().x()+r*qCos(phi*pi/180.0));
-            popupCenterBottomPoint.setY(fillRect.center().y()-r*qSin(phi*pi/180.0));
-            popupPoint.setX(popupCenterBottomPoint.x() - popupTextRect.width()/2-popupPadding);
-            popupPoint.setY(popupCenterBottomPoint.y() - popupTextRect.height()-2*popupPadding-9);
+            QPointF popupPoint {QPointF(fillRect.center().x()+r*qCos(phi*pi/180.0), fillRect.center().y()-r*qSin(phi*pi/180.0))};
+            popupTextRect.moveCenter(QPointF(popupPoint.x(), popupPoint.y()-popupTextRect.height()/2-9));
 
             painter->setBrush(QBrush(pPopup->backgroundColor()));
             painter->setPen(QPen(QColor(0,0,0,0)));
-            painter->drawRoundedRect(popupPoint.x(), popupPoint.y(), popupTextRect.width()+2*popupPadding,
-                                     popupTextRect.height()+2*popupPadding, 5, 5);
+            painter->drawRoundedRect(popupTextRect, 5, 5);
             QPainterPath triangle;
-            triangle.moveTo(popupCenterBottomPoint);
-            triangle.lineTo(popupCenterBottomPoint.x()-10, popupCenterBottomPoint.y()-9);
-            triangle.lineTo(popupCenterBottomPoint.x()+10, popupCenterBottomPoint.y()-9);
-            triangle.lineTo(popupCenterBottomPoint);
+            triangle.moveTo(popupPoint);
+            triangle.lineTo(popupPoint.x()-10, popupPoint.y()-9);
+            triangle.lineTo(popupPoint.x()+10, popupPoint.y()-9);
+            triangle.lineTo(popupPoint);
             painter->drawPath(triangle);
             painter->setPen(QPen(pPopup->textColor()));
-            painter->drawText(popupPoint.x()+popupPadding, popupPoint.y()+popupPadding-popupTextRect.y(), popupTxt);
+            painter->drawText(popupTextRect, Qt::AlignHCenter | Qt::AlignVCenter, popupTxt);
         }
     }
 }
 
 void PieChartCanvas::hoverMoveEvent(QHoverEvent *event)
 {
-    QRectF rect = contentsBoundingRect();
-    QPoint center(rect.x()+rect.width()/2, rect.y()+rect.height()/2);
-    QPointF X = event->posF();
-    double a = qFabs(X.y()-center.y());
-    double b = qSqrt((X.x()-center.x())*(X.x()-center.x())+((X.y()-center.y())*(X.y()-center.y())));
-    double radius = (rect.width()>rect.height())?rect.height()/2:rect.width()/2;
+    QRectF rect {contentsBoundingRect()};
+    QPointF center(rect.center());
+    QPointF X {event->posF()};
+    double a {qFabs(X.y()-center.y())};
+    double b {qSqrt((X.x()-center.x())*(X.x()-center.x())+((X.y()-center.y())*(X.y()-center.y())))};
+    double radius {(rect.width()>rect.height())?rect.height()/2:rect.width()/2};
     if(b > radius){
         if(pCurrentSlice != -1){
             setCurrentItem(-1);
-            update();
             emit hoverSliceChanged();
         }
         return;
     }
-    double alpha = qAsin(a/b)*180.0/pi;
+    double alpha {qAsin(a/b)*180.0/pi};
     if(X.x()>center.x()){
         if(X.y()>center.y())
             alpha = 360 - alpha;
@@ -121,7 +115,7 @@ void PieChartCanvas::hoverMoveEvent(QHoverEvent *event)
         else
             alpha = 180 - alpha;
     }
-    int angle = 0;
+    int angle {0};
     alpha = (int)(alpha - pAngleOffset/16) % 360;
     if(alpha<0)
         alpha = 360+alpha;
@@ -134,7 +128,6 @@ void PieChartCanvas::hoverMoveEvent(QHoverEvent *event)
         if(alpha<angle){
             if(counter != pCurrentSlice){
                 setCurrentItem(counter);
-                update();
                 emit hoverSliceChanged();
             }
             break;
