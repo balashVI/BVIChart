@@ -99,6 +99,6 @@ Item {
     }
 
     function pieChartChangeEnabled(index, value){
-        source.setSliceProperty(index, {enabled: value})
+        source.slices[index].enabled = value
     }
 }

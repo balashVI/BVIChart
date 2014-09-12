@@ -11,6 +11,10 @@ public:
     PolarAreaChartCanvas(QQuickItem *parent = 0);
 
     Q_PROPERTY(ChartAxis *axis READ axis)
+    Q_PROPERTY(bool axisAboveChart READ axisAboveChart WRITE setAxisAboveChart NOTIFY axisAboveChartChanged)
+
+    bool axisAboveChart() const;
+    void setAxisAboveChart(bool value);
     ChartAxis *axis() const;
 
 protected:
@@ -20,11 +24,13 @@ protected:
     void drawAxis(QPainter *painter, QPointF &center);
 
     ChartAxis *pAxis;
+    bool pAxisAboveChart;
 
     double maxDataValue, minDataValue;
     int numberOfEnabledSlices;
 
 signals:
+    void axisAboveChartChanged();
 
 private slots:
 

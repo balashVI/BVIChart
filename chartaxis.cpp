@@ -4,10 +4,10 @@
 #include <QFontMetrics>
 
 ChartAxis::ChartAxis(QObject *parent):
-    QObject(parent), pVisible{true}, pVisibleLabels{true}, pAutomated{true}, pVisibleLines{true},
+    QObject(parent), pVisible{true}, pVisibleLabels{true}, pVisibleLines{true},
     pTextColor{QColor(0,0,0)}, pVisibleLabelBackground{false}, pLabelBackgroundColor{QColor(250,250,250,200)},
-    pLabelPadding{3}, pInvert{false}, pFixedMin{false}, pFixedMax{false}, pMin{0}, pMax{10},
-    mOrientation{AxisOrientation::Horizontal}, mLength{0}
+    pLabelPadding{3}, pInvert{false}, pFixedMin{false}, pFixedMax{false}, pMin{0}, pMax{10}, pFixedNumberOfSteps{false},
+    pNumberOfSteps{5}, pFixedLabels{false}, mOrientation{AxisOrientation::Horizontal}, mLength{0}
 {
     pFont.setPointSize(10);
     linePen.setWidth(1);
@@ -30,20 +30,16 @@ int ChartAxis::labelHeight() const
     return mLabelHeight;
 }
 
-void ChartAxis::setMinMaxValues(double min, double max)
+void ChartAxis::setMinMaxDataValues(double min, double max)
 {
-    minValue = min;
-    maxValue = max;
-}
-
-int ChartAxis::numberOfSteps() const
-{
-    return mNumberOfSteps;
+    minDataValue = min;
+    maxDataValue = max;
+    update();
 }
 
 const QList<QString> &ChartAxis::labels()
 {
-    return mLabels;
+    return pFixedLabels?pLabels:mLabels;
 }
 
 int ChartAxis::convertValue(double value) const
@@ -56,7 +52,7 @@ int ChartAxis::convertValue(double value) const
 
 void ChartAxis::setLength(int value)
 {
-    if(value>0){
+    if(value>0 && mLength!=value){
         mLength = value;
         update();
     }
@@ -64,19 +60,81 @@ void ChartAxis::setLength(int value)
 
 int ChartAxis::length() const
 {
-    return mLength;
+    return mCorrectedLength;
 }
 
 void ChartAxis::changeFont(QVariantMap &value)
 {
     ChartToolkit::variantMapToFont(pFont, value);
+    update();
     emit changed();
     emit fontChanged();
+}
+
+void ChartAxis::setLabels(QList<QString> &value)
+{
+    pLabels = value;
+    if(!pFixedLabels){
+        pFixedLabels = true;
+        emit fixedLabelsChanged();
+    }
+    update();
+    emit labelsChanged();
+    emit changed();
+}
+
+void ChartAxis::setFixedLabels(bool value)
+{
+    pFixedLabels = value;
+    update();
+    emit changed();
+    emit fixedLabelsChanged();
+}
+
+bool ChartAxis::fixedLabels() const
+{
+    return pFixedLabels;
+}
+
+void ChartAxis::setNumberOfSteps(int value)
+{
+    if(value > 0){
+        pNumberOfSteps = value;
+        if(!pFixedNumberOfSteps){
+            pFixedNumberOfSteps = true;
+            emit fixedNumberOfStepsChanged();
+        }
+        emit numberOfStepsChanged();
+        emit changed();
+    }
+}
+
+int ChartAxis::numberOfSteps() const
+{
+    return mNumberOfSteps;
+}
+
+void ChartAxis::setFixedNumberOfSteps(bool value)
+{
+    pFixedNumberOfSteps = value;
+    update();
+    emit fixedNumberOfStepsChanged();
+    emit changed();
+}
+
+bool ChartAxis::fixedNumberOfSteps() const
+{
+    return pFixedNumberOfSteps;
 }
 
 void ChartAxis::setMax(double value)
 {
     pMax = value;
+    if(!pFixedMax){
+        pFixedMax = true;
+        emit fixedMaxChanged();
+    }
+    update();
     emit maxChanged();
     emit changed();
 }
@@ -89,6 +147,7 @@ double ChartAxis::max() const
 void ChartAxis::setFixedMax(bool value)
 {
     pFixedMax = value;
+    update();
     emit fixedMaxChanged();
     emit changed();
 }
@@ -101,6 +160,11 @@ bool ChartAxis::fixedMax() const
 void ChartAxis::setMin(double value)
 {
     pMin = value;
+    if(!pFixedMin){
+        pFixedMin = true;
+        emit fixedMinChanged();
+    }
+    update();
     emit minChanged();
     emit changed();
 }
@@ -113,6 +177,7 @@ double ChartAxis::min() const
 void ChartAxis::setFixedMin(bool value)
 {
     pFixedMin = value;
+    update();
     emit fixedMinChanged();
     emit changed();
 }
@@ -125,6 +190,7 @@ bool ChartAxis::fixedMin() const
 void ChartAxis::setInvert(bool value)
 {
     pInvert = value;
+    update();
     emit changed();
     emit invertChanged();
 }
@@ -137,6 +203,7 @@ bool ChartAxis::invert() const
 void ChartAxis::setLabelPadding(unsigned int value)
 {
     pLabelPadding = value;
+    update();
     emit labelPaddingChanged();
     emit changed();
 }
@@ -177,6 +244,7 @@ QColor ChartAxis::labelBackgroundColor() const
 void ChartAxis::setVisibleLabelBackground(bool value)
 {
     pVisibleLabelBackground = value;
+    update();
     emit visibleLabelBackgroundChanged();
     emit changed();
 }
@@ -218,6 +286,7 @@ bool ChartAxis::visibleLabels() const
 void ChartAxis::setVisibleLabels(bool value)
 {
     pVisibleLabels = value;
+    update();
     emit visibleLabelsChanged();
     emit changed();
 }
@@ -225,18 +294,6 @@ void ChartAxis::setVisibleLabels(bool value)
 QFont ChartAxis::font() const
 {
     return pFont;
-}
-
-bool ChartAxis::automated() const
-{
-    return pAutomated;
-}
-
-void ChartAxis::setAutomated(bool value)
-{
-    pAutomated = value;
-    emit automatedChanged();
-    emit changed();
 }
 
 bool ChartAxis::visibleLines() const
@@ -320,40 +377,56 @@ void ChartAxis::update()
         minSteps=0;
     }
 
-    double valueRange {maxValue - minValue};
+    //Знаходження максимального і мінімального відображуваного значення
+    double valueRange {maxDataValue - minDataValue};
     double rangeOrderOfMagnitude {qPow(10, calculateOrderOfMagnitude(valueRange))};
     if(pFixedMin)
         minPaintedValue = pMin;
     else
-        minPaintedValue = qFloor(minValue / rangeOrderOfMagnitude) * rangeOrderOfMagnitude;
+        minPaintedValue = qFloor(minDataValue / rangeOrderOfMagnitude) * rangeOrderOfMagnitude;
     if(pFixedMax)
         maxPaintedValue = pMax;
     else
-        maxPaintedValue = qCeil(maxValue / rangeOrderOfMagnitude) * rangeOrderOfMagnitude;
-    double graphRange {maxPaintedValue - minPaintedValue};
-    double stepValue {rangeOrderOfMagnitude};
-    mNumberOfSteps = qRound(graphRange / stepValue);
-    while(mNumberOfSteps < minSteps || mNumberOfSteps > maxSteps) {
-        if (mNumberOfSteps < minSteps) {
-            stepValue /= 2;
-            mNumberOfSteps = qRound(graphRange/stepValue);
-        } else{
-            stepValue *=2;
-            mNumberOfSteps = qRound(graphRange/stepValue);
+        maxPaintedValue = qCeil(maxDataValue / rangeOrderOfMagnitude) * rangeOrderOfMagnitude;
+
+    if(pFixedLabels){
+        if(!pLabels.length())
+            pLabels << "";
+        mNumberOfSteps = pLabels.length();
+    } else {
+        //Знаходження кількості кроків сітки
+        double stepValue {rangeOrderOfMagnitude};
+        double graphRange {maxPaintedValue - minPaintedValue};
+        if(!pFixedNumberOfSteps){
+            mNumberOfSteps = qRound(graphRange / stepValue);
+            while(mNumberOfSteps < minSteps || mNumberOfSteps > maxSteps) {
+                if (mNumberOfSteps < minSteps) {
+                    stepValue /= 2;
+                    mNumberOfSteps = qRound(graphRange/stepValue);
+                } else{
+                    stepValue *=2;
+                    mNumberOfSteps = qRound(graphRange/stepValue);
+                }
+            }
+            if(pFixedMax || pFixedMin)
+                stepValue = graphRange/mNumberOfSteps;
+            if(!mNumberOfSteps)
+                mNumberOfSteps=1;
+        } else {
+            mNumberOfSteps = pNumberOfSteps;
+            stepValue = graphRange/mNumberOfSteps;
         }
+
+        //Заповнення списку позначок
+        mLabels.clear();
+        if(pInvert)
+            for (int i=mNumberOfSteps-1; i>=0; --i)
+                mLabels.append(QString::number(minPaintedValue + (stepValue * i)));
+        else
+            for (int i=1; i<=mNumberOfSteps; ++i)
+                mLabels.append(QString::number(minPaintedValue + (stepValue * i)));
     }
-    if(pFixedMax || pFixedMin)
-        stepValue = graphRange/mNumberOfSteps;
-    if(!mNumberOfSteps)
-        mNumberOfSteps=1;
-    mLength = qFloor(mLength/mNumberOfSteps)*mNumberOfSteps;
-    mLabels.clear();
-    if(pInvert)
-        for (int i=mNumberOfSteps-1; i>=0; --i)
-            mLabels.append(QString::number(minPaintedValue + (stepValue * i)));
-    else
-        for (int i=1; i<=mNumberOfSteps; ++i)
-            mLabels.append(QString::number(minPaintedValue + (stepValue * i)));
+    mCorrectedLength = qFloor(mLength/mNumberOfSteps)*mNumberOfSteps;
 }
 
 double ChartAxis::calculateOrderOfMagnitude(double value)

@@ -1,0 +1,5 @@
+0.3.1
+    - виправлена помилка у ChartLegend, пов’язана із неправильною зміною властивості enabled об’єкта PieSlice
+    - значно зменшена кількість оновлень даних ChartAxis
+    - до класу ChartAxis добавлені властивості (fixedNumberOfSteps, numberOfSteps, fixedLabels, labels)
+    - при зміні властивостей ChartAxis таких як: max, min, labels, ..., відповідним їм властивостям fixedMax, fixedMin, ... присвоюється значення true

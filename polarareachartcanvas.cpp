@@ -2,11 +2,23 @@
 #include <limits>
 
 PolarAreaChartCanvas::PolarAreaChartCanvas(QQuickItem *parent) :
-    PieChartCanvas(parent), pAxis{new ChartAxis(this)}
+    PieChartCanvas(parent), pAxis{new ChartAxis(this)}, pAxisAboveChart{true}
 {
     pAxis->setOrientation(ChartAxis::AxisOrientation::Vertical);
     pAxis->setVisibleLabelBackground(true);
     connect(pAxis, SIGNAL(changed()), this, SLOT(update()));
+}
+
+bool PolarAreaChartCanvas::axisAboveChart() const
+{
+    return pAxisAboveChart;
+}
+
+void PolarAreaChartCanvas::setAxisAboveChart(bool value)
+{
+    pAxisAboveChart = value;
+    emit axisAboveChartChanged();
+    update();
 }
 
 ChartAxis *PolarAreaChartCanvas::axis() const
@@ -31,6 +43,9 @@ void PolarAreaChartCanvas::paint(QPainter *painter)
         int phi = 0;
         QString popupTxt;
         int popupRadius{};
+
+        if(!pAxisAboveChart)
+            drawAxis(painter, center);
 
         if(numberOfEnabledSlices){
             //Малювання сегментів
@@ -66,7 +81,9 @@ void PolarAreaChartCanvas::paint(QPainter *painter)
                 }
             }
         }
-        drawAxis(painter, center);
+
+        if(pAxisAboveChart)
+            drawAxis(painter, center);
 
         //Малювання вспливаючої підказки
         if(pPopup->enabled() && pCurrentSlice!=-1){
@@ -136,6 +153,7 @@ void PolarAreaChartCanvas::hoverMoveEvent(QHoverEvent *event)
 
 void PolarAreaChartCanvas::drawAxis(QPainter *painter, QPointF &center)
 {
+
     painter->setPen(pAxis->getLinePen());
     int radiusSteap;
     int currentRadius;
@@ -154,7 +172,6 @@ void PolarAreaChartCanvas::drawAxis(QPainter *painter, QPointF &center)
         radiusSteap = pAxis->length()/pAxis->numberOfSteps();
         currentRadius = 0;
         const QList<QString>& labels {pAxis->labels()};
-
         painter->setFont(pAxis->font());
         painter->setPen(pAxis->textColor());
         painter->setBrush(QBrush(pAxis->labelBackgroundColor()));
@@ -200,7 +217,7 @@ void PolarAreaChartCanvas::sliceChanged()
         if(pCurrentSlice != -1)
             setCurrentItem(-1);
     }
-    pAxis->setMinMaxValues(minDataValue, maxDataValue);
+    pAxis->setMinMaxDataValues(minDataValue, maxDataValue);
     emit slicesChanged();
     update();
 }

@@ -21,9 +21,7 @@ public:
     void setLength(int value);
     int length() const;
     int labelHeight() const;
-    void setMinMaxValues(double min, double max);
-    int numberOfSteps() const;
-    const QList<QString>& labels();
+    void setMinMaxDataValues(double min, double max);
     int convertValue(double value) const;
 
     //*********************************************
@@ -39,7 +37,6 @@ public:
     Q_PROPERTY(bool visible READ visible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(bool visibleLabels READ visibleLabels WRITE setVisibleLabels NOTIFY visibleLabelsChanged)
     Q_PROPERTY(QFont font READ font NOTIFY fontChanged)
-    Q_PROPERTY(bool automated READ automated WRITE setAutomated NOTIFY automatedChanged)
     Q_PROPERTY(bool visibleLines READ visibleLines WRITE setVisibleLines NOTIFY visibleLinesChanged)
     Q_PROPERTY(int lineWidth READ lineWidth WRITE setLineWidth NOTIFY lineWidthChanged)
     Q_PROPERTY(QColor lineColor READ lineColor WRITE setLineColor NOTIFY lineColorChanged)
@@ -55,7 +52,19 @@ public:
     Q_PROPERTY(double min READ min WRITE setMin NOTIFY minChanged)
     Q_PROPERTY(bool fixedMax READ fixedMax WRITE setFixedMax NOTIFY fixedMaxChanged)
     Q_PROPERTY(double max READ max WRITE setMax NOTIFY maxChanged)
+    Q_PROPERTY(bool fixedNumberOfSteps READ fixedNumberOfSteps WRITE setFixedNumberOfSteps NOTIFY fixedNumberOfStepsChanged)
+    Q_PROPERTY(int numberOfSteps READ numberOfSteps WRITE setNumberOfSteps NOTIFY numberOfStepsChanged)
+    Q_PROPERTY(bool fixedLabels READ fixedLabels WRITE setFixedLabels NOTIFY fixedLabelsChanged)
+    Q_PROPERTY(QList<QString> labels READ labels WRITE setLabels NOTIFY labelsChanged)
 
+    void setLabels(QList<QString>& value);
+    const QList<QString>& labels();
+    void setFixedLabels(bool value);
+    bool fixedLabels() const;
+    void setNumberOfSteps(int value);
+    int numberOfSteps() const;
+    void setFixedNumberOfSteps(bool value);
+    bool fixedNumberOfSteps() const;
     void setMax(double value);
     double max() const;
     void setFixedMax(bool value);
@@ -81,8 +90,6 @@ public:
     bool visibleLabels() const;
     void setVisibleLabels(bool value);
     QFont font() const;
-    bool automated() const;
-    void setAutomated(bool value);
     bool visibleLines() const;
     void setVisibleLines(bool value);
     int lineWidth() const;
@@ -104,7 +111,6 @@ private:
     bool pVisible;
     bool pVisibleLabels;
     QFont pFont;
-    bool pAutomated;
     bool pVisibleLines;
     QPen linePen;
     QColor pTextColor;
@@ -116,15 +122,19 @@ private:
     bool pFixedMax;
     double pMin;
     double pMax;
+    bool pFixedNumberOfSteps;
+    int pNumberOfSteps; // Кількість кроків сітки заданих користувачем
+    bool pFixedLabels;
+    QList <QString> pLabels; // Позначки задані користувачем
 
     int mOrientation;
-    int mLength;
+    int mLength, mCorrectedLength;
     int mLabelHeight;
-    double maxValue, minValue;
-    int mNumberOfSteps;
-    QList <QString> mLabels;
+    double maxDataValue, minDataValue;
+    QList <QString> mLabels; // Обчислені позначки
     double minPaintedValue;
     double maxPaintedValue;
+    int mNumberOfSteps; // Обчислена кількість кроків сітки
 
     void update();
     double calculateOrderOfMagnitude(double value);
@@ -134,7 +144,6 @@ signals:
     void visibleChanged();
     void visibleLabelsChanged();
     void fontChanged();
-    void automatedChanged();
     void visibleLinesChanged();
     void lineWidthChanged();
     void lineColorChanged();
@@ -150,6 +159,10 @@ signals:
     void minChanged();
     void fixedMaxChanged();
     void maxChanged();
+    void fixedNumberOfStepsChanged();
+    void numberOfStepsChanged();
+    void fixedLabelsChanged();
+    void labelsChanged();
 
 public slots:
 
