@@ -45,25 +45,25 @@ void PolarAreaChartCanvas::paint(QPainter *painter)
             int angleStep = 360*16/numberOfEnabledSlices;
             int counter{-1};
             int segmentRadius;
-            for (auto &i: slices) {
+            for (PieSlice *i: mSlices) {
                 ++counter;
-                if(!i.enabled)
-                    continue;
-                segmentRadius = pAxis->convertValue(i.value);
-                if(counter == pCurrentSlice){
-                    painter->setBrush(QBrush(i.color.lighter(135)));
-                    if(pPopup->enabled()){
-                        phi = ((int)(beginAngle + angleStep/2)%5760)/16;
-                        popupTxt = i.label+": "+QString::number(i.value);
-                        popupRadius = 0.5*segmentRadius;
-                    }
+                if(i->enabled()){
+                    segmentRadius = pAxis->convertValue(i->value());
+                    if(counter == pCurrentSlice){
+                        painter->setBrush(QBrush(i->highlightColor()));
+                        if(pPopup->enabled()){
+                            phi = ((int)(beginAngle + angleStep/2)%5760)/16;
+                            popupTxt = i->label()+": "+QString::number(i->value());
+                            popupRadius = 0.5*segmentRadius;
+                        }
 
-                } else
-                    painter->setBrush(QBrush(i.color));
+                    } else
+                        painter->setBrush(QBrush(i->color()));
 
-                painter->drawPie(QRect(center.x()-segmentRadius, center.y()-segmentRadius, 2*segmentRadius, 2*segmentRadius),
-                                 beginAngle, angleStep);
-                beginAngle += angleStep;
+                    painter->drawPie(QRect(center.x()-segmentRadius, center.y()-segmentRadius, 2*segmentRadius, 2*segmentRadius),
+                                     beginAngle, angleStep);
+                    beginAngle += angleStep;
+                }
             }
         }
         drawAxis(painter, center);
@@ -114,11 +114,11 @@ void PolarAreaChartCanvas::hoverMoveEvent(QHoverEvent *event)
     int current {qFloor(numberOfEnabledSlices*alpha/360)};
     int currentSliceRadius{0};
 
-    for(int i=0, counter=-1;i<slices.length();++i){
-        if(slices.at(i).enabled)
+    for(int i=0, counter=-1;i<mSlices.length();++i){
+        if(mSlices.at(i)->enabled())
             ++counter;
         if(counter==current){
-            currentSliceRadius=pAxis->convertValue(slices.at(i).value);
+            currentSliceRadius=pAxis->convertValue(mSlices.at(i)->value());
             current=i;
             break;
         }
@@ -174,20 +174,20 @@ void PolarAreaChartCanvas::drawAxis(QPainter *painter, QPointF &center)
 void PolarAreaChartCanvas::sliceChanged()
 {
     numberOfEnabledSlices = 0;
-    for(auto &i: slices)
-        if(i.enabled)
+    for(PieSlice *i: mSlices)
+        if(i->enabled())
             ++numberOfEnabledSlices;
 
     if(numberOfEnabledSlices){
         maxDataValue = INT_MIN;
         minDataValue = INT_MAX;
-        for(auto &i:slices){
-            if(!i.enabled)
-                continue;
-            if(i.value > maxDataValue)
-                maxDataValue = i.value;
-            if(i.value < minDataValue)
-                minDataValue = i.value;
+        for(PieSlice *i: mSlices){
+            if(i->enabled()){
+            if(i->value() > maxDataValue)
+                maxDataValue = i->value();
+            if(i->value() < minDataValue)
+                minDataValue = i->value();
+            }
         }
     } else {
         maxDataValue = 10;
@@ -201,5 +201,6 @@ void PolarAreaChartCanvas::sliceChanged()
             setCurrentItem(-1);
     }
     pAxis->setMinMaxValues(minDataValue, maxDataValue);
+    emit slicesChanged();
     update();
 }

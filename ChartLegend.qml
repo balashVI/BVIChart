@@ -22,6 +22,7 @@ Item {
             source.onHoverSliceChanged.connect(chartHowerIndexChange)
             list.changingEnabled.connect(pieChartChangeEnabled)
             previousSource = source
+            updateLegend()
         } else
             previousSource = null
     }

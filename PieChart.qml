@@ -31,7 +31,6 @@ Rectangle {
             right: legend.left
             margins: 5
         }
-
         strokeColor: root.color
     }
 

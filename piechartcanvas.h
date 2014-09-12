@@ -2,6 +2,8 @@
 #define PieChartCanvas_H
 
 #include "chartcanvas.h"
+#include "pieslice.h"
+#include <QQmlListProperty>
 
 class PieChartCanvas : public ChartCanvas
 {
@@ -11,12 +13,9 @@ public:
     PieChartCanvas(QQuickItem *parent = 0);
 
     Q_INVOKABLE void addSlice(QVariantMap data);
-    Q_INVOKABLE bool setSliceProperty(int sliceIndex, QVariantMap data);
     Q_INVOKABLE bool moveSlice(int from, int to);
-    Q_INVOKABLE int numberOfSlices();
-    Q_INVOKABLE bool removeSlice(int index);
     Q_INVOKABLE void removeAllSlices();
-    Q_INVOKABLE QVariantMap getSlice(int index);
+    Q_INVOKABLE bool removeSlice(int index);
     Q_INVOKABLE QVariantList getLegend();
 
     Q_PROPERTY(bool strokeVisible READ strokeVisible WRITE setStrokeVisible NOTIFY strokeVisibleChanged)
@@ -24,6 +23,8 @@ public:
     Q_PROPERTY(QColor strokeColor READ strokeColor WRITE setStrokeColor NOTIFY strokeColorChanged)
     Q_PROPERTY(int currentItem READ currentItem WRITE setCurrentItem NOTIFY currentItemChanged)
     Q_PROPERTY(int angleOffset READ angleOffset WRITE setAngleOffset NOTIFY angleOffsetChanged)
+    Q_PROPERTY(QQmlListProperty<PieSlice> slices READ slices NOTIFY slicesChanged())
+    QQmlListProperty<PieSlice> slices();
 
     bool strokeVisible() const;
     void setStrokeVisible(bool value);
@@ -37,24 +38,15 @@ public:
     void setAngleOffset(int value);
 
 protected:
+    static void appendSlice(QQmlListProperty<PieSlice> *slices, PieSlice *slice);
+    static int slicesLength(QQmlListProperty<PieSlice> *slices);
+    static PieSlice *sliceAt(QQmlListProperty<PieSlice> *slices, int index);
+    QList<PieSlice *> mSlices;
+
     virtual void paint(QPainter *painter);
     virtual void hoverMoveEvent(QHoverEvent * event);
     virtual void sliceChanged();
 
-    struct pieSlice{
-        QString label;
-        double value;
-        QColor color;
-        bool enabled;
-        pieSlice(){
-            label = "Slice";
-            value = 1;
-            color = QColor("gray");
-            enabled = true;
-        }
-    };
-
-    QList <pieSlice> slices;
     double sumSlicesValue;
 
     bool pStrokeVisible;
@@ -73,6 +65,7 @@ signals:
     void angleOffsetChanged();
 
 private slots:
+    void someSliceChanged();
 
 };
 
