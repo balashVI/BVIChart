@@ -4,6 +4,9 @@
 #include "chartpopup.h"
 #include "chartaxis.h"
 #include "pieslice.h"
+#include "xychart.h"
+#include "chartheader.h"
+#include "chartfont.h"
 
 #include <qqml.h>
 
@@ -15,6 +18,9 @@ void ChartsPlugin::registerTypes(const char *uri)
     qmlRegisterType<ChartPopup>(uri, 1, 0, "ChartPopup");
     qmlRegisterType<ChartAxis>(uri, 1, 0, "ChartAxis");
     qmlRegisterType<PieSlice>(uri, 1, 0, "PieSlice");
+    qmlRegisterType<XYChart>(uri, 1, 0, "XYChart");
+    qmlRegisterType<ChartHeader>(uri, 1, 0, "ChartHeader");
+    qmlRegisterType<ChartFont>(uri, 1, 0, "ChartFont");
 }
 
 

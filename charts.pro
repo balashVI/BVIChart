@@ -17,7 +17,10 @@ SOURCES += \
     chartpopup.cpp \
     charttoolkit.cpp \
     chartaxis.cpp \
-    pieslice.cpp
+    pieslice.cpp \
+    xychart.cpp \
+    chartheader.cpp \
+    chartfont.cpp
 
 HEADERS += \
     charts_plugin.h \
@@ -27,7 +30,10 @@ HEADERS += \
     chartpopup.h \
     charttoolkit.h \
     chartaxis.h \
-    pieslice.h
+    pieslice.h \
+    xychart.h \
+    chartheader.h \
+    chartfont.h
 
 OTHER_FILES = qmldir \
     PieChart.qml \
