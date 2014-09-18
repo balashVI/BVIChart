@@ -11,35 +11,25 @@ uri = BVI.Charts
 # Input
 SOURCES += \
     charts_plugin.cpp \
-    piechartcanvas.cpp \
-    polarareachartcanvas.cpp \
-    chartcanvas.cpp \
-    chartpopup.cpp \
     charttoolkit.cpp \
-    chartaxis.cpp \
     pieslice.cpp \
     xychart.cpp \
     chartheader.cpp \
-    chartfont.cpp
+    chartfont.cpp \
+    abstractchart.cpp \
+    chartlegend.cpp
 
 HEADERS += \
     charts_plugin.h \
-    piechartcanvas.h \
-    polarareachartcanvas.h \
-    chartcanvas.h \
-    chartpopup.h \
     charttoolkit.h \
-    chartaxis.h \
     pieslice.h \
     xychart.h \
     chartheader.h \
-    chartfont.h
+    chartfont.h \
+    abstractchart.h \
+    chartlegend.h
 
-OTHER_FILES = qmldir \
-    PieChart.qml \
-    ChartLegend.qml \
-    PolarAreaChart.qml \
-    changelog.txt
+OTHER_FILES = qmldir
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir

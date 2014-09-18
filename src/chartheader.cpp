@@ -4,11 +4,23 @@
 #include <QDebug>
 
 ChartHeader::ChartHeader(QQuickItem *parent) :
-    QQuickPaintedItem(parent), pTitle{"Chart"}, pFont{new ChartFont(this)}
+    QQuickPaintedItem(parent), pTitle{"Chart"}, pFont{new ChartFont(this)}, pTitleColor{QColor("black")}
 {
     setAntialiasing(true);
     pFont->setPointSize(14);
     connect(pFont, SIGNAL(changed()), this, SLOT(recalculateSize()));
+    recalculateSize();
+}
+
+void ChartHeader::setTitleColor(const QColor &value)
+{
+    pTitleColor = value;
+    emit titleColorChanged();
+}
+
+QColor ChartHeader::titleColor() const
+{
+    return pTitleColor;
 }
 
 void ChartHeader::setFont(ChartFont *value)
@@ -50,4 +62,5 @@ void ChartHeader::recalculateSize()
     QFontMetrics fMetrics(pFont->getFont());
     QRect contentRect = fMetrics.boundingRect(pTitle);
     setSize(QSize(contentRect.width(), contentRect.height()));
+    emit sizeChanged();
 }

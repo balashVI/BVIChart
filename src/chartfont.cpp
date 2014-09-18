@@ -6,6 +6,12 @@ ChartFont::ChartFont(QObject *parent) :
 {
 }
 
+/**
+ * @brief
+ *
+ * Повертає посилання на змінну типу QFont, котра містить сукупні характеристики шрифту
+ * @see QFont
+ */
 const QFont &ChartFont::getFont()
 {
     return font;

@@ -1,6 +1,0 @@
-module BVI.Charts
-PieChart 1.0 PieChart.qml
-ChartLegend 1.0 ChartLegend.qml
-PolarAreaChart 1.0 PolarAreaChart.qml
-plugin Charts
-

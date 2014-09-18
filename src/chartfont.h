@@ -12,10 +12,17 @@ public:
 
     Q_INVOKABLE const QFont& getFont();
 
+    /// Встановлює жирне написання тексту
     Q_PROPERTY(bool bold READ bold WRITE setBold NOTIFY boldChanged)
     Q_PROPERTY(QString family READ family WRITE setFamily NOTIFY familyChanged)
+
+    /// Встановлює курсивне написання тексту
     Q_PROPERTY(bool italic READ italic WRITE setItalic NOTIFY italicChanged)
+
+    /// Встановлює розмір тексту в пікселях
     Q_PROPERTY(int pixelSize READ pixelSize WRITE setPixelSize NOTIFY pixelSizeChanged)
+
+    /// Встановлює розмір тексту в пунктах
     Q_PROPERTY(int pointSize READ pointSize WRITE setPointSize NOTIFY pointSizeChanged)
 
     void setPointSize(int value);
