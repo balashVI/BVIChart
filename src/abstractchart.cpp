@@ -2,7 +2,7 @@
 #include <QDebug>
 
 AbstractChart::AbstractChart(QQuickItem *parent) :
-    QQuickItem(parent), pHeader{this}, pLegend{this}, pPadding{10}
+    QQuickItem(parent), pHeader{this}, pLegend{this}, pSpacing{10}
 {
     qDebug() << (pHeader.parentItem() == this);
     setClip(true);
@@ -21,7 +21,7 @@ ChartLegend *AbstractChart::legend()
 
 void AbstractChart::updateChildrenGeometry()
 {
-    pHeader.setPosition(QPoint((width()-pHeader.width())/2, pPadding));
+    pHeader.setPosition(QPoint((width()-pHeader.width())/2, pSpacing));
 }
 
 void AbstractChart::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
@@ -29,16 +29,16 @@ void AbstractChart::geometryChanged(const QRectF &newGeometry, const QRectF &old
     updateChildrenGeometry();
 }
 
-void AbstractChart::setPadding(int value)
+void AbstractChart::setSpacing(int value)
 {
-    if(pPadding!=value){
-        pPadding = value;
+    if(pSpacing!=value){
+        pSpacing = value;
         updateChildrenGeometry();
-        emit paddingChanged();
+        emit spacingChanged();
     }
 }
 
-int AbstractChart::padding() const
+int AbstractChart::spacing() const
 {
-    return pPadding;
+    return pSpacing;
 }

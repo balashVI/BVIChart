@@ -11,7 +11,6 @@ uri = BVI.Charts
 # Input
 SOURCES += \
     charts_plugin.cpp \
-    charttoolkit.cpp \
     pieslice.cpp \
     xychart.cpp \
     chartheader.cpp \
@@ -21,7 +20,6 @@ SOURCES += \
 
 HEADERS += \
     charts_plugin.h \
-    charttoolkit.h \
     pieslice.h \
     xychart.h \
     chartheader.h \

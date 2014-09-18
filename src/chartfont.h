@@ -4,6 +4,11 @@
 #include <QObject>
 #include <QFont>
 
+/**
+ * @brief Налаштування шрифта
+ *
+ * Інкапсулює різноманітні налаштування шрифта
+ */
 class ChartFont : public QObject
 {
     Q_OBJECT

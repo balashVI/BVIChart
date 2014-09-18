@@ -4,15 +4,24 @@
 #include <QQuickPaintedItem>
 #include "chartfont.h"
 
+/**
+ * @brief Заголовок графіка
+ *
+ * Малює заголовок графіка
+ */
 class ChartHeader : public QQuickPaintedItem
 {
     Q_OBJECT
 public:
     explicit ChartHeader(QQuickItem *parent = 0);
 
-    /// Тест
+    /// Задає заголовок графіка
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+
+    ///Задає налаштування шрифта заголовка
     Q_PROPERTY(ChartFont* font READ font WRITE setFont NOTIFY fontChanged)
+
+    ///Задає колір заголовка
     Q_PROPERTY(QColor titleColor READ titleColor WRITE setTitleColor NOTIFY titleColorChanged)
 
     void setTitleColor(const QColor& value);

@@ -4,16 +4,30 @@
 #include <QQuickItem>
 #include <QColor>
 
+/**
+ * @brief Сегмент PieChart
+ *
+ * Інкапсулює властивості сегмента графіка PieChart
+ */
 class PieSlice : public QQuickItem
 {
     Q_OBJECT
 public:
     explicit PieSlice(QQuickItem *parent = 0);
 
+    ///Задає числове значення сегмента
     Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged)
+
+    ///Задає назву сегмента
     Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY labelChanged)
+
+    ///Якщо FALSE сегмент не буде малюватися
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
+
+    ///Задає колір мегмента
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
+
+    ///Задає колір сегмента у випадку коли він активний
     Q_PROPERTY(QColor highlightColor READ highlightColor WRITE setHighlightColor NOTIFY highlightColorChanged)
 
     void setHighlightColor(const QColor & value);
