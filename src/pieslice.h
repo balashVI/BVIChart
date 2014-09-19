@@ -13,6 +13,7 @@ class PieSlice : public QQuickItem
 {
     Q_OBJECT
 public:
+    ///Конструктор класу
     explicit PieSlice(QQuickItem *parent = 0);
 
     ///Задає числове значення сегмента

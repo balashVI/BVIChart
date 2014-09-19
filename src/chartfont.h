@@ -13,6 +13,7 @@ class ChartFont : public QObject
 {
     Q_OBJECT
 public:
+    ///Конструктор класу
     explicit ChartFont(QObject *parent = 0);
 
     Q_INVOKABLE const QFont& getFont();

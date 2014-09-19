@@ -14,16 +14,19 @@ class AbstractChart : public QQuickItem
 {
     Q_OBJECT
 public:
+    ///Конструктор класу
     explicit AbstractChart(QQuickItem *parent = 0);
     void geometryChanged(const QRectF & newGeometry, const QRectF & oldGeometry) override;
 
-    /// Заголовок графіка
+    /// Ця властивість зберігає елемент заголовку графіка
+    /// \see ChartHeader
     Q_PROPERTY(ChartHeader* header READ header NOTIFY headerChanged)
 
-    ///Легенда графіка
+    /// Ця властивість зберігає легенду графіка
+    /// \see ChartHeader
     Q_PROPERTY(ChartLegend* legend READ legend NOTIFY legendChanged)
 
-    ///Відстань між компонентами графіка
+    /// Ця вдастивість задає відстань між компонентами графіка
     Q_PROPERTY(int spacing READ spacing WRITE setSpacing NOTIFY spacingChanged)
 
     void setSpacing(int value);

@@ -16,7 +16,11 @@ SOURCES += \
     chartheader.cpp \
     chartfont.cpp \
     abstractchart.cpp \
-    chartlegend.cpp
+    chartlegend.cpp \
+    barchart.cpp \
+    abstractseries.cpp \
+    barseries.cpp \
+    piechart.cpp
 
 HEADERS += \
     charts_plugin.h \
@@ -25,7 +29,11 @@ HEADERS += \
     chartheader.h \
     chartfont.h \
     abstractchart.h \
-    chartlegend.h
+    chartlegend.h \
+    barchart.h \
+    abstractseries.h \
+    barseries.h \
+    piechart.h
 
 OTHER_FILES = qmldir
 

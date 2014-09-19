@@ -13,6 +13,7 @@ class ChartLegend : public QQuickItem
     Q_OBJECT
     Q_ENUMS(LegendLocation)
 public:
+    ///Конструктор класу
     explicit ChartLegend(QQuickItem *parent = 0);
 
     void setLegendData(QVector<QString>&& labels, QVector<QColor> && colors);

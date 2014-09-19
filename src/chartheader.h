@@ -13,6 +13,7 @@ class ChartHeader : public QQuickPaintedItem
 {
     Q_OBJECT
 public:
+    ///Конструктор класу
     explicit ChartHeader(QQuickItem *parent = 0);
 
     /// Задає заголовок графіка
