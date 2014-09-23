@@ -3,6 +3,8 @@
 BarChart::BarChart(QQuickItem *parent) :
     AbstractChart(parent)
 {
+    connect(this, SIGNAL(seriesChanged()), &pLegend, SLOT(updateLegend()));
+    pLegend.setSeriesList((QList<AbstractSeries*>*)(&seriesList));
 }
 
 QQmlListProperty<BarSeries> BarChart::series()
@@ -15,8 +17,11 @@ void BarChart::appendSeries(QQmlListProperty<BarSeries> *seriesList, BarSeries *
 {
     BarChart *chart = qobject_cast<BarChart *>(seriesList->object);
     if (chart) {
-        series->setParent(chart);
+        series->setParentItem(chart);
         chart->seriesList.append(series);
+        connect(series, SIGNAL(nameChanged()), &chart->pLegend, SLOT(updateLegend()));
+        connect(series, SIGNAL(colorChanged()), &chart->pLegend, SLOT(updateLegend()));
+        connect(series, SIGNAL(enabledChanged()), &chart->pLegend, SLOT(updateLegend()));
         chart->seriesChanged();
     }
 }

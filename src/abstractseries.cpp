@@ -1,8 +1,19 @@
 #include "abstractseries.h"
 
 AbstractSeries::AbstractSeries(QQuickItem *parent) :
-    QQuickPaintedItem(parent), pName{"Series"}, pEnabled{true}
+    QQuickPaintedItem(parent), pName{"Series"}, pEnabled{true}, pColor{"gray"}
 {
+}
+
+void AbstractSeries::setColor(const QColor &value)
+{
+    pColor = value;
+    emit colorChanged();
+}
+
+QColor AbstractSeries::color() const
+{
+    return pColor;
 }
 
 void AbstractSeries::setEnabled(bool value)
@@ -23,8 +34,6 @@ QString AbstractSeries::name() const
 
 void AbstractSeries::setName(const QString &value)
 {
-    if(pName!=value){
-        pName=value;
-        emit nameChanged();
-    }
+    pName=value;
+    emit nameChanged();
 }
