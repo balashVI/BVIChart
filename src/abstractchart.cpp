@@ -22,6 +22,16 @@ ChartLegend *AbstractChart::legend()
 void AbstractChart::updateChildrenGeometry()
 {
     pHeader.setPosition(QPoint((width()-pHeader.width())/2, pSpacing));
+    //Визначення координат та розмірів ChartLegend
+    switch (pLegend.location()) {
+    case ((int)ChartLegend::RightLocation):
+        pLegend.recalculateSize(height()-3*spacing()-pHeader.height());
+        pLegend.setX(x()+width()-spacing()-pLegend.width());
+        pLegend.setY(pHeader.y()+pHeader.height()+spacing());
+        break;
+    default:
+        break;
+    }
 }
 
 void AbstractChart::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
