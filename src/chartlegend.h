@@ -39,7 +39,11 @@ public:
     Q_PROPERTY(ChartFont* font READ font WRITE setFont NOTIFY fontChanged)
     ///Задає ширину елемента легенди
     Q_PROPERTY(int elementsWidth READ elementsWidth WRITE setElementsWidth NOTIFY elementsWidthChanged)
+    ///Задає відастань від краю елементу до його вмісту
+    Q_PROPERTY(int elementsPadding READ elementsPadding WRITE setElementsPadding NOTIFY elementsPaddingChanged)
 
+    void setElementsPadding(int value);
+    int elementsPadding() const;
     void setElementsWidth(int value);
     int elementsWidth() const;
     void setFont(ChartFont* value);
@@ -52,6 +56,7 @@ private:
     QList<AbstractSeries*> *series;
     ChartFont *pFont;
     int pElementsWidth;
+    int pElementsPadding;
 
     int mElementsHeight; //Висота елемента легенди
     int rows, columns; //Кількість стовпців та рядків легенди
@@ -62,6 +67,7 @@ signals:
     void locationChanged();
     void fontChanged();
     void elementsWidthChanged();
+    void elementsPaddingChanged();
 
 public slots:
     void updateLegend();
