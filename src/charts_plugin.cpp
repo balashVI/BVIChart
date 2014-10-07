@@ -6,6 +6,8 @@
 #include "chartlegend.h"
 #include "barchart.h"
 #include "barseries.h"
+#include "categoryaxis.h"
+#include "chartpen.h"
 
 #include <qqml.h>
 
@@ -19,6 +21,8 @@ void ChartsPlugin::registerTypes(const char *uri)
     qmlRegisterType<ChartLegend>(uri, 1, 0, "ChartLegend");
     qmlRegisterType<BarChart>(uri, 1, 0, "BarChart");
     qmlRegisterType<BarSeries>(uri, 1, 0, "BarSeries");
+    qmlRegisterType<CategoryAxis>(uri, 1, 0, "CategoryAxis");
+    qmlRegisterType<ChartPen>(uri, 1, 0, "ChartPen");
 }
 
 

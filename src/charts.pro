@@ -20,7 +20,10 @@ SOURCES += \
     barchart.cpp \
     abstractseries.cpp \
     barseries.cpp \
-    piechart.cpp
+    piechart.cpp \
+    abstractaxis.cpp \
+    categoryaxis.cpp \
+    chartpen.cpp
 
 HEADERS += \
     charts_plugin.h \
@@ -33,7 +36,10 @@ HEADERS += \
     barchart.h \
     abstractseries.h \
     barseries.h \
-    piechart.h
+    piechart.h \
+    abstractaxis.h \
+    categoryaxis.h \
+    chartpen.h
 
 OTHER_FILES = qmldir
 

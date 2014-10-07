@@ -3,6 +3,7 @@
 
 #include "abstractchart.h"
 #include "barseries.h"
+#include "categoryaxis.h"
 
 ///
 /// \brief Стовпчикова діаграма
@@ -54,6 +55,12 @@ public:
     Q_PROPERTY(QQmlListProperty<BarSeries> series READ series NOTIFY seriesChanged())
     QQmlListProperty<BarSeries> series();
 
+    Q_PROPERTY(CategoryAxis* xAxis READ xAxis NOTIFY xAxisChanged)
+    CategoryAxis* xAxis();
+
+private:
+    CategoryAxis pXAxis;
+
 protected:
     static void appendSeries(QQmlListProperty<BarSeries> *seriesList, BarSeries *series);
     static int seriesListLength(QQmlListProperty<BarSeries> *seriesList);
@@ -64,6 +71,9 @@ signals:
     /// Сигналізує про зміну серій
     /// \see BarSeries
     void seriesChanged();
+    void xAxisChanged();
+private slots:
+    void updateChildrenGeometry() override;
 };
 
 #endif // BARCHART_H

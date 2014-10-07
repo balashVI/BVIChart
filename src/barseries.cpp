@@ -7,5 +7,4 @@ BarSeries::BarSeries(QQuickItem *parent) :
 
 void BarSeries::paint(QPainter *painter)
 {
-
 }
