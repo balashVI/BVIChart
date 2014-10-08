@@ -15,10 +15,20 @@ public:
     ///Конструктор класу
     explicit BarSeries(QQuickItem *parent = 0);
 
+    ///Містить список даних
+    Q_PROPERTY(QList<double> data READ data WRITE setData NOTIFY dataChanged)
+
+    const QList<double> &data() const;
+    void setData(QList<double> value);
+
+private:
+    QList<double> pData;
+
 protected:
     virtual void paint(QPainter *painter);
 
 signals:
+    void dataChanged();
 
 public slots:
 

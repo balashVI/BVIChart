@@ -2,17 +2,25 @@
 #include <QPainter>
 
 CategoryAxis::CategoryAxis(QQuickItem *parent) :
-    AbstractAxis(parent)
+    AbstractAxis(parent), numberOfCategories{1}
 {
+}
+
+void CategoryAxis::setNumberOfCategories(int value)
+{
+    numberOfCategories = value;
+    update();
 }
 
 void CategoryAxis::paint(QPainter *painter)
 {
-    int categorysCount{pLabels.length()};
-    if(categorysCount == 0) categorysCount = 1;
-    int lineX;
-    for(int i{0}; i!=(categorysCount-1); ++i){
-        lineX =(width()/categorysCount)*(i+1);
-        painter->drawLine(lineX, 0, lineX, height());
+    //Малювання основних ліній сітки
+    if(pMajorLines->visible()){
+        painter->setPen(pMajorLines->getPen());
+        int lineX;
+        for(int i{0}; i!=(numberOfCategories-1); ++i){
+            lineX =(width()/numberOfCategories)*(i+1);
+            painter->drawLine(lineX, 0, lineX, height());
+        }
     }
 }

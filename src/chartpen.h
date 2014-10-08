@@ -24,12 +24,21 @@ public:
     QColor color() const;
     void setColor(const QColor &newColor);
 
+    Q_PROPERTY(bool visible READ visible WRITE setVisible NOTIFY visibleChanged)
+    bool visible() const;
+    void setVisible(bool value);
+
+    ///Повертає QPen
+    Q_INVOKABLE const QPen &getPen() const;
+
 private:
     QPen pen;
+    bool pVisible;
 
 signals:
     void widthChanged();
     void colorChanged();
+    void visibleChanged();
 
 };
 

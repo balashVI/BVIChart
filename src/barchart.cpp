@@ -27,7 +27,9 @@ void BarChart::appendSeries(QQmlListProperty<BarSeries> *seriesList, BarSeries *
         connect(series, SIGNAL(nameChanged()), &chart->pLegend, SLOT(updateLegend()));
         connect(series, SIGNAL(colorChanged()), &chart->pLegend, SLOT(updateLegend()));
         connect(series, SIGNAL(enabledChanged()), &chart->pLegend, SLOT(updateLegend()));
-        chart->seriesChanged();
+        connect(series, SIGNAL(dataChanged()), chart, SLOT(calculateNumbersOfCategories()));
+        chart->calculateNumbersOfCategories();
+        emit chart->seriesChanged();
     }
 }
 
@@ -92,4 +94,13 @@ void BarChart::updateChildrenGeometry()
         pLegend.recalculateSize(0);
         break;
     }
+}
+
+void BarChart::calculateNumbersOfCategories()
+{
+    int numberOfCategories{1};
+    for(BarSeries* i: seriesList)
+        if(numberOfCategories < i->data().length())
+            numberOfCategories = i->data().length();
+    pXAxis.setNumberOfCategories(numberOfCategories);
 }

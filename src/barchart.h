@@ -74,6 +74,7 @@ signals:
     void xAxisChanged();
 private slots:
     void updateChildrenGeometry() override;
+    void calculateNumbersOfCategories();
 };
 
 #endif // BARCHART_H

@@ -9,8 +9,12 @@ class CategoryAxis : public AbstractAxis
 public:
     explicit CategoryAxis(QQuickItem *parent = 0);
 
+    //Задає кількість категорій
+    void setNumberOfCategories(int value);
+
 private:
     virtual void paint(QPainter *painter);
+    int numberOfCategories;
 
 signals:
 
