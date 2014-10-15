@@ -1,9 +1,16 @@
 #include "chartfont.h"
 #include <QDebug>
+#include <QFontMetrics>
 
 ChartFont::ChartFont(QObject *parent) :
     QObject(parent)
 {
+}
+
+int ChartFont::getHeight()
+{
+    QFontMetrics metrics(font);
+    return metrics.height();
 }
 
 /**

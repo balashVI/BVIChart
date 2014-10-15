@@ -16,6 +16,9 @@ public:
     ///Конструктор класу
     explicit ChartFont(QObject *parent = 0);
 
+    //Повертає висоту символа
+    int getHeight();
+
     Q_INVOKABLE const QFont& getFont();
 
     /// Встановлює жирне написання тексту

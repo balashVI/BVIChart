@@ -26,7 +26,7 @@ public:
     Q_PROPERTY(QColor titleColor READ titleColor WRITE setTitleColor NOTIFY titleColorChanged)
 
     void setTitleColor(const QColor& value);
-    QColor titleColor() const;
+    const QColor& titleColor() const;
     void setFont(ChartFont* value);
     ChartFont* font();
     const QString& title() const;

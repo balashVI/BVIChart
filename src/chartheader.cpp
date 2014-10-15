@@ -8,6 +8,7 @@ ChartHeader::ChartHeader(QQuickItem *parent) :
 {
     setAntialiasing(true);
     pFont->setPointSize(14);
+    pFont->setBold(true);
     connect(pFont, SIGNAL(changed()), this, SLOT(recalculateSize()));
     recalculateSize();
 }
@@ -18,7 +19,7 @@ void ChartHeader::setTitleColor(const QColor &value)
     emit titleColorChanged();
 }
 
-QColor ChartHeader::titleColor() const
+const QColor &ChartHeader::titleColor() const
 {
     return pTitleColor;
 }

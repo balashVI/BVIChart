@@ -5,6 +5,7 @@ BarChart::BarChart(QQuickItem *parent) :
 {
     connect(this, SIGNAL(seriesChanged()), &pLegend, SLOT(updateLegend()));
     pLegend.setSeriesList((QList<AbstractSeries*>*)(&seriesList));
+    pXAxis.setName("X");
 }
 
 QQmlListProperty<BarSeries> BarChart::series()

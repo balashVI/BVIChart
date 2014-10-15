@@ -11,10 +11,13 @@ public:
 
     //Задає кількість категорій
     void setNumberOfCategories(int value);
+    //Обчислює положення лінії осі
+    int calculateAxisLinePosition();
 
 private:
     virtual void paint(QPainter *painter);
-    int numberOfCategories;
+    int numberOfCategories, axisLinePosition;
+    int space; //Містить значення відступів між елементами
 
 signals:
 
