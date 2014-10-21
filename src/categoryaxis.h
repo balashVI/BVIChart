@@ -15,7 +15,7 @@ public:
     int calculateAxisLinePosition();
 
 private:
-    virtual void paint(QPainter *painter);
+    virtual void paint(QPainter *painter) override;
     int numberOfCategories, axisLinePosition;
     int space; //Містить значення відступів між елементами
 

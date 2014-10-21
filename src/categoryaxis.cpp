@@ -1,5 +1,4 @@
 #include "categoryaxis.h"
-#include <QPainter>
 
 CategoryAxis::CategoryAxis(QQuickItem *parent) :
     AbstractAxis(parent), numberOfCategories{1}, axisLinePosition{0}, space{5}
@@ -14,7 +13,12 @@ void CategoryAxis::setNumberOfCategories(int value)
 
 int CategoryAxis::calculateAxisLinePosition()
 {
-
+    int res{height()};
+    if(pNameVisible)
+        res -= (pNameFont->getHeight()+space);
+    if(pLabelsVisible)
+        res -= (pLabelsFont->getHeight()+space);
+    return res;
 }
 
 void CategoryAxis::paint(QPainter *painter)

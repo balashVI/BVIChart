@@ -2,6 +2,7 @@
 #define ABSTRACTAXIS_H
 
 #include <QQuickPaintedItem>
+#include <QPainter>
 #include "chartpen.h"
 #include "chartfont.h"
 

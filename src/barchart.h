@@ -4,6 +4,7 @@
 #include "abstractchart.h"
 #include "barseries.h"
 #include "categoryaxis.h"
+#include "standartaxis.h"
 
 ///
 /// \brief Стовпчикова діаграма
@@ -55,23 +56,28 @@ public:
     Q_PROPERTY(QQmlListProperty<BarSeries> series READ series NOTIFY seriesChanged())
     QQmlListProperty<BarSeries> series();
 
+    ///Мітистить вісь категорій х
     Q_PROPERTY(CategoryAxis* xAxis READ xAxis NOTIFY xAxisChanged)
     CategoryAxis* xAxis();
 
-private:
-    CategoryAxis pXAxis;
+    ///Містить вісь у
+    Q_PROPERTY(StandartAxis* yAxis READ yAxis NOTIFY yAxisChanged)
+    StandartAxis* yAxis();
 
 protected:
     static void appendSeries(QQmlListProperty<BarSeries> *seriesList, BarSeries *series);
     static int seriesListLength(QQmlListProperty<BarSeries> *seriesList);
     static BarSeries *seriesAt(QQmlListProperty<BarSeries> *seriesList, int index);
     QList<BarSeries *> seriesList;
+    CategoryAxis pXAxis;
+    StandartAxis pYAxis;
 
 signals:
     /// Сигналізує про зміну серій
     /// \see BarSeries
     void seriesChanged();
     void xAxisChanged();
+    void yAxisChanged();
 private slots:
     void updateChildrenGeometry() override;
     void calculateNumbersOfCategories();

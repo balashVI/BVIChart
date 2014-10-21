@@ -23,7 +23,8 @@ SOURCES += \
     piechart.cpp \
     abstractaxis.cpp \
     categoryaxis.cpp \
-    chartpen.cpp
+    chartpen.cpp \
+    standartaxis.cpp
 
 HEADERS += \
     charts_plugin.h \
@@ -39,7 +40,8 @@ HEADERS += \
     piechart.h \
     abstractaxis.h \
     categoryaxis.h \
-    chartpen.h
+    chartpen.h \
+    standartaxis.h
 
 OTHER_FILES = qmldir
 
