@@ -1,10 +1,9 @@
 #include "barchart.h"
+#include <QFontMetrics>
 
-BarChart::BarChart(QQuickItem *parent) :
+BarChart::BarChart(QQuickPaintedItem *parent) :
     AbstractChart(parent), pXAxis{this}, pYAxis{this}
 {
-    connect(this, SIGNAL(seriesChanged()), &pLegend, SLOT(updateLegend()));
-    pLegend.setSeriesList((QList<AbstractSeries*>*)(&seriesList));
     pXAxis.setName("X");
 }
 
@@ -28,12 +27,10 @@ void BarChart::appendSeries(QQmlListProperty<BarSeries> *seriesList, BarSeries *
 {
     BarChart *chart = qobject_cast<BarChart *>(seriesList->object);
     if (chart) {
-        series->setParentItem(chart);
+        series->setParent(chart);
         chart->seriesList.append(series);
-        connect(series, SIGNAL(nameChanged()), &chart->pLegend, SLOT(updateLegend()));
-        connect(series, SIGNAL(colorChanged()), &chart->pLegend, SLOT(updateLegend()));
-        connect(series, SIGNAL(enabledChanged()), &chart->pLegend, SLOT(updateLegend()));
         connect(series, SIGNAL(dataChanged()), chart, SLOT(calculateNumbersOfCategories()));
+        connect(series, SIGNAL(dataChanged()), chart, SLOT(calculateDataRange()));
         chart->calculateNumbersOfCategories();
         emit chart->seriesChanged();
     }
@@ -55,85 +52,71 @@ BarSeries *BarChart::seriesAt(QQmlListProperty<BarSeries> *seriesList, int index
     return nullptr;
 }
 
-void BarChart::updateChildrenGeometry()
+void BarChart::paint(QPainter *painter)
 {
-    pHeader.setPosition(QPoint((width()-pHeader.width())/2, pSpacing));
-    //Визначення координат та розмірів дочірніх елементів
-    switch (pLegend.location()) {
-    case (ChartLegend::RightLocation):
-        pLegend.recalculateSize(height()-3*pSpacing-pHeader.height());
-        pLegend.setX(x()+width()-pSpacing-pLegend.width());
-        pLegend.setY(pHeader.y()+pHeader.height()+pSpacing);
+    QPen pen(QColor("red"), 2);
+    painter->setPen(pen);
+    painter->setRenderHints(QPainter::Antialiasing, true);
+    painter->drawPie(boundingRect().adjusted(1, 1, -1, -1), 90 * 16, 290 * 16);
 
-        pXAxis.setX(pSpacing+pYAxis.calculateAxisLinePosition());
-        pXAxis.setY(pLegend.y());
-        pYAxis.setX(pSpacing);
-        pYAxis.setY(pLegend.y());
-        pYAxis.setWidth(width()-pLegend.width()-3*pSpacing);
-        pXAxis.setSize(QSizeF(pYAxis.width()-pYAxis.calculateAxisLinePosition(),
-                              height()-pHeader.height()-3*pSpacing));
-        pYAxis.setHeight(pXAxis.calculateAxisLinePosition());
-        break;
-    case(ChartLegend::LeftLocation):
-        pLegend.recalculateSize(height()-3*pSpacing-pHeader.height());
-        pLegend.setX(pSpacing);
-        pLegend.setY(pHeader.y()+pHeader.height()+pSpacing);
+    drawAxes(painter);
+}
 
-        pYAxis.setX(pLegend.width()+2*pSpacing);
-        pYAxis.setY(pLegend.y());
-        pXAxis.setX(pYAxis.x()+pYAxis.calculateAxisLinePosition());
-        pXAxis.setY(pLegend.y());
-        pYAxis.setWidth(width()-pLegend.width()-3*pSpacing);
-        pXAxis.setSize(QSizeF(pYAxis.width()-pYAxis.calculateAxisLinePosition(),
-                              height()-pHeader.height()-3*pSpacing));
-        pYAxis.setHeight(pXAxis.calculateAxisLinePosition());
-        break;
-    case(ChartLegend::TopLocation):
-        pLegend.recalculateSize(width()-2*pSpacing);
-        pLegend.setX(pSpacing);
-        pLegend.setY(pHeader.y()+pHeader.height()+pSpacing);
-
-        pYAxis.setX(pSpacing);
-        pYAxis.setY(pLegend.y()+pLegend.height()+pSpacing);
-        pXAxis.setX(pSpacing+pYAxis.calculateAxisLinePosition());
-        pXAxis.setY(pYAxis.y());
-        pYAxis.setWidth(width()-2*pSpacing);
-        pXAxis.setSize(QSizeF(pYAxis.width()-pYAxis.calculateAxisLinePosition(),
-                              height()-pLegend.y()-pLegend.height()-2*pSpacing));
-        pYAxis.setHeight(pXAxis.calculateAxisLinePosition());
-        break;
-    case(ChartLegend::BottomLocation):
-        pLegend.recalculateSize(width()-2*pSpacing);
-        pLegend.setX(pSpacing);
-        pLegend.setY(y()+height()-pSpacing-pLegend.height());
-
-        pYAxis.setX(pSpacing);
-        pYAxis.setY(pHeader.y()+pHeader.height()+pSpacing);
-        pXAxis.setX(pSpacing+pYAxis.calculateAxisLinePosition());
-        pXAxis.setY(pYAxis.y());
-        pYAxis.setWidth(width()-2*pSpacing);
-        pXAxis.setSize(QSizeF(pYAxis.width()-pYAxis.calculateAxisLinePosition(),
-                              height()-pLegend.height()-pHeader.height()-4*pSpacing));
-        pYAxis.setHeight(pXAxis.calculateAxisLinePosition());
-        break;
-    default:
-        //Якщо легенда не відображається
-        pLegend.recalculateSize(0);
-        pYAxis.setX(pSpacing);
-        pYAxis.setY(pHeader.y()+pHeader.height()+pSpacing);
-        pXAxis.setX(pSpacing+pYAxis.calculateAxisLinePosition());
-        pXAxis.setY(pYAxis.y());
-        pYAxis.setWidth(width()-2*pSpacing);
-        pXAxis.setSize(QSizeF(pYAxis.width()-pYAxis.calculateAxisLinePosition(),
-                              height()-2*pSpacing));
-        pYAxis.setHeight(pXAxis.calculateAxisLinePosition());
-        break;
+void BarChart::prepare()
+{
+    int labelsWidth{pXAxis.getWidthOfMaxLabel()};
+    int maxSize =  boundingRect().height();
+    if(boundingRect().width()/pXAxis.labels().length()<labelsWidth){
+        rotateLabels = 45.0*M_PI/180.0;
+        if(boundingRect().width()/pXAxis.labels().length()<qCos(rotateLabels)*labelsWidth){
+            rotateLabels = 90.0*M_PI/180.0;
+            maxSize -= labelsWidth;
+        } else {
+            maxSize -= qSin(rotateLabels)*labelsWidth;
+        }
+    } else {
+        maxSize -= QFontMetrics(pXAxis.labelsFont()->getFont()).height();
     }
 
-    //Зміна розмірів серій
-    for(int i=0;i<seriesList.length();++i){
-        seriesList[i]->setPosition(QPointF(pXAxis.x(), pXAxis.y()));
-        seriesList[i]->setSize(QSizeF(pXAxis.width(), pYAxis.height()));
+    maxSize -= 5;
+
+    maxSize -= QFontMetrics(pXAxis.labelsFont()->getFont()).height();
+
+    int scaleHeight{maxSize};
+
+    double maxSteps = qFloor(scaleHeight/(QFontMetrics(pYAxis.labelsFont()->getFont()).height()*0.66));
+    double minSteps = qFloor(scaleHeight/QFontMetrics(pYAxis.labelsFont()->getFont()).height()*0.5);
+
+
+}
+
+void BarChart::drawAxes(QPainter *painter)
+{
+    painter->setPen(pXAxis.axisLine()->getPen());
+    painter->drawLine(boundingRect().width()-pXAxis.getWidthOfMaxLabel()/2+5,50,100,100);
+}
+
+void BarChart::drawRotatedText(QPainter *painter, float degrees, int x, int y, const QString &text)
+{
+    painter->save();
+    painter->translate(x, y);
+    painter->rotate(degrees);
+    painter->drawText(0, 0, text);
+    painter->restore();
+}
+
+void BarChart::calculateDataRange()
+{
+    upperValue = std::numeric_limits<int>::min();
+    loverValue = std::numeric_limits<int>::max();
+
+    for(BarSeries *i: seriesList){
+        for(double j: i->data()){
+            if(j>upperValue)
+                upperValue = j;
+            if(j<loverValue)
+                loverValue = j;
+        }
     }
 }
 

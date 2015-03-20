@@ -1,6 +1,7 @@
 #include "barseries.h"
+#include <QDebug>
 
-BarSeries::BarSeries(QQuickItem *parent) :
+BarSeries::BarSeries(QObject *parent) :
     AbstractSeries(parent)
 {
 }
@@ -14,12 +15,4 @@ void BarSeries::setData(QList<double> value)
 {
     pData = std::move(value);
     emit dataChanged();
-}
-
-void BarSeries::paint(QPainter *painter)
-{
-    if(parent()->inherits("BarChart")){
-            painter->setBrush(QBrush(QColor("#11111111")));
-            painter->drawRect(QRect(0, 0, width()-1,height()));
-    }
 }

@@ -1,7 +1,7 @@
 #include "xychart.h"
 #include <QDebug>
 
-XYChart::XYChart(QQuickItem *parent) :
+XYChart::XYChart(QQuickPaintedItem *parent) :
     AbstractChart(parent)
 {
 

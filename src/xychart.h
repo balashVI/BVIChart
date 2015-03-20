@@ -2,14 +2,13 @@
 #define XYChart_H
 
 #include <QQuickItem>
-#include "chartheader.h"
 #include "abstractchart.h"
 
 class XYChart : public AbstractChart
 {
     Q_OBJECT
 public:
-    explicit XYChart(QQuickItem *parent = 0);
+    explicit XYChart(QQuickPaintedItem *parent = 0);
 
 private:
 

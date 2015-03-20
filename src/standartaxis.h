@@ -9,10 +9,7 @@ class StandartAxis : public AbstractAxis
 public:
     explicit StandartAxis(QQuickItem *parent = 0);
 
-    int calculateAxisLinePosition();
-
 private:
-    virtual void paint(QPainter *painter) override;
 
 signals:
 

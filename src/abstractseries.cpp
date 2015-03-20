@@ -1,7 +1,7 @@
 #include "abstractseries.h"
 
-AbstractSeries::AbstractSeries(QQuickItem *parent) :
-    QQuickPaintedItem(parent), pName{"Series"}, pEnabled{true}, pColor{"gray"}
+AbstractSeries::AbstractSeries(QObject *parent) :
+    QObject(parent), pName{"Series"}, pEnabled{true}, pColor{"gray"}
 {
 }
 

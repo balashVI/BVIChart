@@ -2,7 +2,7 @@
 #include <QDebug>
 
 AbstractAxis::AbstractAxis(QQuickItem *parent) :
-    QQuickPaintedItem(parent), pAxisPen{new ChartPen(this)}, pMajorLines{new ChartPen(this)},
+    QQuickItem(parent), pAxisPen{new ChartPen(this)}, pMajorLines{new ChartPen(this)},
     pMinorLines{new ChartPen(this)}, pLabelsFont{new ChartFont(this)}, pNameFont{new ChartFont(this)},
     pNameVisible{true}, pLabelsVisible{true}
 {
@@ -134,4 +134,12 @@ void AbstractAxis::setLabels(QList<QString> in)
 const QList<QString>& AbstractAxis::labels() const
 {
     return pLabels;
+}
+
+int AbstractAxis::min(int a, int b)
+{
+    if(a<b)
+        return a;
+    else
+        return b;
 }

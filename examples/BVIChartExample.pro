@@ -12,8 +12,6 @@ SOURCES += main.cpp \
     ../src/barseries.cpp \
     ../src/categoryaxis.cpp \
     ../src/chartfont.cpp \
-    ../src/chartheader.cpp \
-    ../src/chartlegend.cpp \
     ../src/chartpen.cpp \
     ../src/charts_plugin.cpp \
     ../src/piechart.cpp \
@@ -37,8 +35,6 @@ HEADERS += \
     ../src/barseries.h \
     ../src/categoryaxis.h \
     ../src/chartfont.h \
-    ../src/chartheader.h \
-    ../src/chartlegend.h \
     ../src/chartpen.h \
     ../src/charts_plugin.h \
     ../src/piechart.h \

@@ -1,12 +1,11 @@
 #ifndef ABSTRACTAXIS_H
 #define ABSTRACTAXIS_H
 
-#include <QQuickPaintedItem>
-#include <QPainter>
+#include <QQuickItem>
 #include "chartpen.h"
 #include "chartfont.h"
 
-class AbstractAxis : public QQuickPaintedItem
+class AbstractAxis : public QQuickItem
 {
     Q_OBJECT
 public:
@@ -70,6 +69,7 @@ protected:
     QString pName;
     bool pNameVisible, pLabelsVisible;
     QColor pNameColor;
+    int min(int a, int b);
 
 signals:
     void labelsChanged();

@@ -25,7 +25,7 @@ class PieChart : public AbstractChart
 {
     Q_OBJECT
 public:
-    explicit PieChart(QQuickItem *parent = 0);
+    explicit PieChart(QQuickPaintedItem *parent = 0);
 
 signals:
 

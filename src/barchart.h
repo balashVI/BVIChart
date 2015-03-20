@@ -29,7 +29,7 @@ class BarChart : public AbstractChart
     Q_OBJECT
 public:
     ///Конструктор класу
-    explicit BarChart(QQuickItem *parent = 0);
+    explicit BarChart(QQuickPaintedItem *parent = 0);
 
     /// Зберігає список серій графіка
     ///
@@ -71,6 +71,12 @@ protected:
     QList<BarSeries *> seriesList;
     CategoryAxis pXAxis;
     StandartAxis pYAxis;
+    void paint(QPainter *painter) override;
+    void prepare(); //Обчислює додаткові дані
+    void drawAxes(QPainter *painter); // Малює осі координат
+    void drawRotatedText(QPainter *painter, float degrees, int x, int y, const QString &text); //Малює текст з нахилом
+    double rotateLabels; // Кут повороту підписів
+    double upperValue, loverValue;
 
 signals:
     /// Сигналізує про зміну серій
@@ -79,8 +85,9 @@ signals:
     void xAxisChanged();
     void yAxisChanged();
 private slots:
-    void updateChildrenGeometry() override;
     void calculateNumbersOfCategories();
+    void calculateDataRange();
+
 };
 
 #endif // BARCHART_H

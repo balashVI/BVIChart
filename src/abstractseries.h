@@ -9,12 +9,12 @@
 ///
 /// Містить основні властивості та функціонал властиві усім серіям графіків
 ///
-class AbstractSeries : public QQuickPaintedItem
+class AbstractSeries : public QObject
 {
     Q_OBJECT
 public:
     ///Конструктор класу
-    explicit AbstractSeries(QQuickItem *parent = 0);
+    explicit AbstractSeries(QObject *parent = 0);
 
     ///Назва серії
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)

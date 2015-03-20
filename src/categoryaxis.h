@@ -9,17 +9,24 @@ class CategoryAxis : public AbstractAxis
 public:
     explicit CategoryAxis(QQuickItem *parent = 0);
 
-    //Задає кількість категорій
+    ///Містить список даних
+    Q_PROPERTY(QList<QString> labels READ labels WRITE setLabels NOTIFY labelsChanged)
+
+    const QList<QString> &labels() const;
+    void setLabels(QList<QString> newLabels);
+
     void setNumberOfCategories(int value);
-    //Обчислює положення лінії осі
-    int calculateAxisLinePosition();
+    int getWidthOfMaxLabel();//Повертає довжину найдовшого підпису
 
 private:
-    virtual void paint(QPainter *painter) override;
-    int numberOfCategories, axisLinePosition;
-    int space; //Містить значення відступів між елементами
+    int numberOfCategories;
+    QList<QString> pLabels;
+    int widthOfMaxLabel;
+
+    void calculateWidthOfMaxLabel(); //Обчислює довжину найдовшого підпису
 
 signals:
+    void labelsChanged();
 
 public slots:
 

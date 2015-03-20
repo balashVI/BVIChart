@@ -13,14 +13,7 @@ ApplicationWindow {
             title: qsTr("&Тип графіка")
             MenuItem {
                 text: qsTr("Стовпчикковий графік")
-                onTriggered: loader.source = "BarChartForm.ui.qml";
-            }
-        }
-        Menu{
-            title: qsTr("Засоби")
-            MenuItem{
-                text: qsTr("Властивості графіка")
-                onTriggered: loader.item.openDialog();
+                onTriggered: loader.source = "BarChartForm.qml";
             }
         }
     }

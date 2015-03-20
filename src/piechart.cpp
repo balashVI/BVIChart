@@ -1,6 +1,6 @@
 #include "piechart.h"
 
-PieChart::PieChart(QQuickItem *parent) :
+PieChart::PieChart(QQuickPaintedItem *parent) :
     AbstractChart(parent)
 {
 }
