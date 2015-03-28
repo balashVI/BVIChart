@@ -6,7 +6,7 @@ AbstractAxis::AbstractAxis(QQuickItem *parent) :
     pMinorLines{new ChartPen(this)}, pLabelsFont{new ChartFont(this)}, pNameFont{new ChartFont(this)},
     pNameVisible{true}, pLabelsVisible{true}
 {
-    pLabelsFont->setPointSize(11);
+    pLabelsFont->setPointSize(9);
     pNameFont->setPointSize(12);
     pNameFont->setBold(true);
 }

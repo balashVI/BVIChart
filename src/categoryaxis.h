@@ -12,6 +12,18 @@ public:
     ///Містить список даних
     Q_PROPERTY(QList<QString> labels READ labels WRITE setLabels NOTIFY labelsChanged)
 
+    ///Містить відстань між стовпцями
+    Q_PROPERTY(int barValueSpacing READ barValueSpacing WRITE setBarValueSpacing NOTIFY barValueSpacingChanged)
+
+    ///Містить відстань між категоріями
+    Q_PROPERTY(int barDatasetSpacing READ barDatasetSpacing WRITE setBarDatasetSpacing NOTIFY barDatasetSpacingChanged)
+
+    int barDatasetSpacing() const;
+    void setBarDatasetSpacing(int value);
+
+    int barValueSpacing() const;
+    void setBarValueSpacing(int value);
+
     const QList<QString> &labels() const;
     void setLabels(QList<QString> newLabels);
 
@@ -22,11 +34,14 @@ private:
     int numberOfCategories;
     QList<QString> pLabels;
     int widthOfMaxLabel;
+    int pBarValueSpacing, pBarDatasetSpacing;
 
     void calculateWidthOfMaxLabel(); //Обчислює довжину найдовшого підпису
 
 signals:
     void labelsChanged();
+    void barValueSpacingChanged();
+    void barDatasetSpacingChanged();
 
 public slots:
 

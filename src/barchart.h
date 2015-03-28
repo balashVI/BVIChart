@@ -72,10 +72,7 @@ protected:
     CategoryAxis pXAxis;
     StandartAxis pYAxis;
     void paint(QPainter *painter) override;
-    void prepare(); //Обчислює додаткові дані
-    void drawAxes(QPainter *painter); // Малює осі координат
     void drawRotatedText(QPainter *painter, float degrees, int x, int y, const QString &text); //Малює текст з нахилом
-    double rotateLabels; // Кут повороту підписів
     double upperValue, loverValue;
 
 signals:
