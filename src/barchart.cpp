@@ -56,6 +56,7 @@ BarSeries *BarChart::seriesAt(QQmlListProperty<BarSeries> *seriesList, int index
 
 void BarChart::paint(QPainter *painter)
 {
+    painter->setRenderHints(QPainter::Antialiasing, true);
     //Обчислення додаткових параметрів
     double xAxisLabelsHeight = pXAxis.labelsFont()->getHeight();
     int labelsWidth{pXAxis.getWidthOfMaxLabel()};
@@ -72,7 +73,6 @@ void BarChart::paint(QPainter *painter)
     } else {
         maxSize -= xAxisLabelsHeight;
     }
-    qDebug() << boundingRect().width()/pXAxis.labels().length() << rotateLabels;
     maxSize -= 5;
     maxSize -= xAxisLabelsHeight;
 
@@ -121,7 +121,7 @@ void BarChart::paint(QPainter *painter)
             painter->drawText(yAxisPosX+i*valueHop, xAxisPosY, valueHop,
                               xAxisLabelsHeight, Qt::AlignCenter, pXAxis.labels()[i]);
     }
-    painter->setPen(pXAxis.majorLines()->getPen());
+    painter->setPen(pXAxis.gridLines()->getPen());
     for(int i=0;i<pXAxis.labels().length();i++){
         painter->drawLine(yAxisPosX+(1+i)*valueHop, xAxisPosY+3, yAxisPosX+(1+i)*valueHop,5);
     }
@@ -129,7 +129,7 @@ void BarChart::paint(QPainter *painter)
     //Малювання осі У
     painter->setPen(pYAxis.axisLine()->getPen());
     painter->drawLine(yAxisPosX, xAxisPosY+5, yAxisPosX, 5);
-    painter->setPen(pYAxis.majorLines()->getPen());
+    painter->setPen(pYAxis.gridLines()->getPen());
     for(int i=0;i<pYAxis.labels().length();++i){
         painter->drawLine(yAxisPosX-3,xAxisPosY-(i+1)*scaleHop, yAxisPosX+xAxisLength+5,
                           xAxisPosY-(i+1)*scaleHop);

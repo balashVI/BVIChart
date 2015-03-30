@@ -1,5 +1,4 @@
 #include "barseries.h"
-#include <QDebug>
 
 BarSeries::BarSeries(QObject *parent) :
     AbstractSeries(parent), pStrokePen{new ChartPen(this)}

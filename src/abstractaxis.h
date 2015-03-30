@@ -17,11 +17,8 @@ public:
     ///Містить налаштування лінії осі
     Q_PROPERTY(ChartPen* axisLine READ axisLine WRITE setAxisLine NOTIFY axisLineChanged)
 
-    ///Містить налаштування основних ліній сітки
-    Q_PROPERTY(ChartPen* majorLines READ majorLines WRITE setMajorLines NOTIFY majorLinesChanged)
-
-    ///Містить налаштування допоміжних ліній сітки
-    Q_PROPERTY(ChartPen* minorLines READ minorLines WRITE setMinorLines NOTIFY minorLinesChanged)
+    ///Містить налаштування ліній сітки
+    Q_PROPERTY(ChartPen* gridLines READ gridLines WRITE setGridLines NOTIFY gridLinesChanged)
 
     ///Містить налаштування шрифту міток осі
     Q_PROPERTY(ChartFont* labelsFont READ labelsFont WRITE setLabelsFont NOTIFY labelsFontChanged)
@@ -53,10 +50,8 @@ public:
     void setName(QString value);
     void setLabelsFont(ChartFont* value);
     ChartFont* labelsFont() const;
-    void setMinorLines(ChartPen* value);
-    ChartPen* minorLines() const;
-    void setMajorLines(ChartPen* value);
-    ChartPen* majorLines() const;
+    void setGridLines(ChartPen* value);
+    ChartPen* gridLines() const;
     void setAxisLine(ChartPen* value);
     ChartPen* axisLine() const;
     void setLabels(QList<QString> in);
@@ -64,7 +59,7 @@ public:
 
 protected:
     QList<QString> pLabels;
-    ChartPen *pAxisPen, *pMajorLines, *pMinorLines;
+    ChartPen *pAxisPen, *pGridLines;
     ChartFont *pLabelsFont, *pNameFont;
     QString pName;
     bool pNameVisible, pLabelsVisible;
@@ -74,8 +69,7 @@ protected:
 signals:
     void labelsChanged();
     void axisLineChanged();
-    void majorLinesChanged();
-    void minorLinesChanged();
+    void gridLinesChanged();
     void labelsFontChanged();
     void nameChanged();
     void nameFontChanged();

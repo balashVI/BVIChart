@@ -2,8 +2,8 @@
 #include <QDebug>
 
 AbstractAxis::AbstractAxis(QQuickItem *parent) :
-    QQuickItem(parent), pAxisPen{new ChartPen(this)}, pMajorLines{new ChartPen(this)},
-    pMinorLines{new ChartPen(this)}, pLabelsFont{new ChartFont(this)}, pNameFont{new ChartFont(this)},
+    QQuickItem(parent), pAxisPen{new ChartPen(this)}, pGridLines{new ChartPen(this)},
+    pLabelsFont{new ChartFont(this)}, pNameFont{new ChartFont(this)},
     pNameVisible{true}, pLabelsVisible{true}
 {
     pLabelsFont->setPointSize(9);
@@ -83,32 +83,18 @@ ChartFont *AbstractAxis::labelsFont() const
     return pLabelsFont;
 }
 
-void AbstractAxis::setMinorLines(ChartPen *value)
+void AbstractAxis::setGridLines(ChartPen *value)
 {
     if(value){
-        pMinorLines->deleteLater();
-        pMinorLines=value;
-        emit minorLinesChanged();
+        pGridLines->deleteLater();
+        pGridLines=value;
+        emit gridLinesChanged();
     }
 }
 
-ChartPen *AbstractAxis::minorLines() const
+ChartPen *AbstractAxis::gridLines() const
 {
-    return pMinorLines;
-}
-
-void AbstractAxis::setMajorLines(ChartPen *value)
-{
-    if(value){
-        pMajorLines->deleteLater();
-        pMajorLines=value;
-        emit majorLinesChanged();
-    }
-}
-
-ChartPen *AbstractAxis::majorLines() const
-{
-    return pMajorLines;
+    return pGridLines;
 }
 
 void AbstractAxis::setAxisLine(ChartPen *value)

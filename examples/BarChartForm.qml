@@ -1,14 +1,13 @@
 import QtQuick 2.4
 import BVI.Charts 1.0
-import QtQuick.Controls 1.2
-import QtQuick.Layouts 1.1
 
 Rectangle {
-    anchors.fill: parent
     color: "white"
     BarChart{
         anchors.fill: parent
         xAxis.labels: ["first", "second", "third", "fourth"]
+        xAxis.gridLines.color: "gray"
+        yAxis.gridLines.color: "gray"
         series: [BarSeries{
                 data: [10, 20, 31]
                 color: "#667575A3"

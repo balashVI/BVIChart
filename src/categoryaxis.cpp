@@ -1,5 +1,4 @@
 #include "categoryaxis.h"
-#include <QDebug>
 #include <QFontMetrics>
 
 CategoryAxis::CategoryAxis(QQuickItem *parent) :
@@ -62,5 +61,4 @@ void CategoryAxis::calculateWidthOfMaxLabel()
         if(labelWidth > widthOfMaxLabel)
             widthOfMaxLabel = labelWidth;
     }
-    qDebug() << boundingRect();
 }
