@@ -82,8 +82,6 @@ void PieChart::paint(QPainter *painter)
     fillRect.adjust(pStrokePen->width(), pStrokePen->width(), -pStrokePen->width(),
                     -pStrokePen->width());
 
-    qDebug() << sumSliceValue;
-
     //Малювання сегментів
     painter->setPen(pStrokePen->getPen());
     double beginAngle = pAngleOffset;

@@ -17,7 +17,9 @@ SOURCES += main.cpp \
     ../src/piechart.cpp \
     ../src/pieslice.cpp \
     ../src/standartaxis.cpp \
-    ../src/xychart.cpp
+    ../src/xychart.cpp \
+    ../src/polarareachart.cpp \
+    ../src/polararea.cpp
 
 RESOURCES += qml.qrc
 
@@ -40,4 +42,6 @@ HEADERS += \
     ../src/piechart.h \
     ../src/pieslice.h \
     ../src/standartaxis.h \
-    ../src/xychart.h
+    ../src/xychart.h \
+    ../src/polarareachart.h \
+    ../src/polararea.h

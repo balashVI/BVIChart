@@ -55,7 +55,8 @@ QList<QString> AbstractChart::populateLabels(int numberOfSteps, double graphMin,
 {
     QList<QString> res = QList<QString>();
     int numberOfDecimalPlaces;
-    if(modf(stepValue, nullptr)!=0)
+    double intpart;
+    if(modf(stepValue, &intpart)!=0)
         numberOfDecimalPlaces=QString::number(stepValue).split('.')[1].length();
     else
         numberOfDecimalPlaces=0;

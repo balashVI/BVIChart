@@ -6,8 +6,6 @@ Rectangle {
     BarChart{
         anchors.fill: parent
         xAxis.labels: ["first", "second", "third", "fourth"]
-        xAxis.gridLines.color: "gray"
-        yAxis.gridLines.color: "gray"
         series: [BarSeries{
                 data: [10, 20, 31]
                 color: "#667575A3"

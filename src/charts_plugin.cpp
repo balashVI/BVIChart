@@ -8,12 +8,16 @@
 #include "chartpen.h"
 #include "standartaxis.h"
 #include "piechart.h"
+#include "polararea.h"
+#include "polarareachart.h"
 
 #include <qqml.h>
 
 void ChartsPlugin::registerTypes(const char *uri)
 {
     // @uri BVI.Charts
+    qmlRegisterType<PolarArea>(uri, 1, 0, "PolarArea");
+    qmlRegisterType<PolarAreaChart>(uri, 1, 0, "PolarAreaChart");
     qmlRegisterType<PieSlice>(uri, 1, 0, "PieSlice");
     qmlRegisterType<PieChart>(uri, 1, 0, "PieChart");
     qmlRegisterType<XYChart>(uri, 1, 0, "XYChart");

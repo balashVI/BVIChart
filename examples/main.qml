@@ -13,15 +13,15 @@ ApplicationWindow {
             title: qsTr("&Тип графіка")
             MenuItem {
                 text: qsTr("AllCharts")
-                onTriggered: loader.source = "AllChartsForm.qml";
+                onTriggered: loader.source = "AllChartsForm.qml"
             }
             MenuItem {
                 text: qsTr("BarChart")
-                onTriggered: loader.source = "BarChartForm.qml";
+                onTriggered: loader.source = "BarChartForm.qml"
             }
             MenuItem {
                 text: qsTr("PieChart")
-                onTriggered: loader.source = "PieChartForm.qml";
+                onTriggered: loader.source = "PieChartForm.qml"
             }
         }
     }
