@@ -32,16 +32,16 @@ public:
     ///Керує відображенням назви осі
     Q_PROPERTY(bool nameVisible READ nameVisible WRITE setNameVisible NOTIFY nameVisibleChanged)
 
-    ///Містить колір назви осі
-    Q_PROPERTY(QColor nameColor READ nameColor WRITE setNameColor NOTIFY nameColorChanged)
+    ///Містить колір міток
+    Q_PROPERTY(QColor labelsColor READ labelsColor WRITE setLabelsColor NOTIFY labelsColorChanged)
 
     ///Вмикає/вимикає відображення підписів осі
     Q_PROPERTY(bool labelsVisible READ labelsVisible WRITE setLabelsVisible NOTIFY labelsVisibleChanged)
 
     void setLabelsVisible(bool value);
     bool labelsVisible() const;
-    void setNameColor(const QColor& value);
-    const QColor& nameColor() const;
+    void setLabelsColor(const QColor& value);
+    const QColor& labelsColor() const;
     void setNameVisible(bool value);
     bool nameVisible() const;
     void setNameFont(ChartFont* value);
@@ -63,8 +63,7 @@ protected:
     ChartFont *pLabelsFont, *pNameFont;
     QString pName;
     bool pNameVisible, pLabelsVisible;
-    QColor pNameColor;
-    int min(int a, int b);
+    QColor pLabelsColor;
 
 signals:
     void labelsChanged();
@@ -74,7 +73,7 @@ signals:
     void nameChanged();
     void nameFontChanged();
     void nameVisibleChanged();
-    void nameColorChanged();
+    void labelsColorChanged();
     void labelsVisibleChanged();
 
 public slots:

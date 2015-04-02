@@ -2,7 +2,7 @@ import QtQuick 2.4
 import BVI.Charts 1.0
 
 Rectangle {
-    color: "white"
+    color: "gray"
 
     PieChart{
         anchors.fill: parent
@@ -14,7 +14,7 @@ Rectangle {
                 color: "#66CCFF"
                 value: 20
             },PieSlice{
-                color: "blue"
+                color: "#7A4A8D"
                 value: 15
             },PieSlice{
                 color: "#7575A3"

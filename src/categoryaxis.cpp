@@ -56,7 +56,7 @@ void CategoryAxis::calculateWidthOfMaxLabel()
     int labelWidth;
     widthOfMaxLabel = 0;
     QFontMetrics fm = QFontMetrics(pLabelsFont->getFont());
-    for(int i=0;i<min(numberOfCategories, pLabels.length());++i){
+    for(int i=0;i<qMin(numberOfCategories, pLabels.length());++i){
         labelWidth = fm.width(pLabels[i]);
         if(labelWidth > widthOfMaxLabel)
             widthOfMaxLabel = labelWidth;

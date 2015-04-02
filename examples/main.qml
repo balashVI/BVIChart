@@ -23,6 +23,10 @@ ApplicationWindow {
                 text: qsTr("PieChart")
                 onTriggered: loader.source = "PieChartForm.qml"
             }
+            MenuItem {
+                text: qsTr("PolarAreaChart")
+                onTriggered: loader.source = "PolarAreaChartForm.qml"
+            }
         }
     }
 

@@ -14,6 +14,10 @@ Rectangle {
             Layout.fillHeight: true
             Layout.fillWidth: true
         }
+        PolarAreaChartForm{
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+        }
     }
 }
 

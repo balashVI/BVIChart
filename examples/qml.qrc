@@ -4,5 +4,6 @@
         <file>BarChartForm.qml</file>
         <file>PieChartForm.qml</file>
         <file>AllChartsForm.qml</file>
+        <file>PolarAreaChartForm.qml</file>
     </qresource>
 </RCC>

@@ -186,6 +186,9 @@ void BarChart::calculateDataRange()
                 loverValue = j;
         }
     }
+    double offset {(upperValue-loverValue)*0.01};
+    upperValue += offset;
+    loverValue -= offset;
 }
 
 void BarChart::calculateNumbersOfCategories()

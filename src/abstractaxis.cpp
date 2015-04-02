@@ -22,15 +22,15 @@ bool AbstractAxis::labelsVisible() const
     return pLabelsVisible;
 }
 
-void AbstractAxis::setNameColor(const QColor &value)
+void AbstractAxis::setLabelsColor(const QColor &value)
 {
-    pNameColor = value;
-    emit nameColorChanged();
+    pLabelsColor = value;
+    emit labelsColorChanged();
 }
 
-const QColor &AbstractAxis::nameColor() const
+const QColor &AbstractAxis::labelsColor() const
 {
-    return pNameColor;
+    return pLabelsColor;
 }
 
 void AbstractAxis::setNameVisible(bool value)
@@ -120,12 +120,4 @@ void AbstractAxis::setLabels(QList<QString> in)
 const QList<QString>& AbstractAxis::labels() const
 {
     return pLabels;
-}
-
-int AbstractAxis::min(int a, int b)
-{
-    if(a<b)
-        return a;
-    else
-        return b;
 }
