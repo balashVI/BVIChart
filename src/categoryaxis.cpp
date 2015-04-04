@@ -2,7 +2,7 @@
 #include <QFontMetrics>
 
 CategoryAxis::CategoryAxis(QQuickItem *parent) :
-    AbstractAxis(parent), numberOfCategories{0}, widthOfMaxLabel{0}, pBarValueSpacing{3}, pBarDatasetSpacing{5}
+    AbstractAxis(parent), widthOfMaxLabel{0}, pBarValueSpacing{3}, pBarDatasetSpacing{5}
 {
 }
 
@@ -40,12 +40,6 @@ void CategoryAxis::setLabels(QList<QString> newLabels)
     emit labelsChanged();
 }
 
-void CategoryAxis::setNumberOfCategories(int value)
-{
-    numberOfCategories=value;
-    calculateWidthOfMaxLabel();
-}
-
 int CategoryAxis::getWidthOfMaxLabel()
 {
     return widthOfMaxLabel;
@@ -56,7 +50,7 @@ void CategoryAxis::calculateWidthOfMaxLabel()
     int labelWidth;
     widthOfMaxLabel = 0;
     QFontMetrics fm = QFontMetrics(pLabelsFont->getFont());
-    for(int i=0;i<qMin(numberOfCategories, pLabels.length());++i){
+    for(int i=0;i<pLabels.length();++i){
         labelWidth = fm.width(pLabels[i]);
         if(labelWidth > widthOfMaxLabel)
             widthOfMaxLabel = labelWidth;

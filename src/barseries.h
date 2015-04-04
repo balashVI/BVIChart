@@ -19,10 +19,10 @@ public:
     ///Містить список даних
     Q_PROPERTY(QList<double> data READ data WRITE setData NOTIFY dataChanged)
 
-    ///Містить налаштування лінії обведення стовпців
+    ///Містить налаштування лінії обведення
     Q_PROPERTY(ChartPen* strokePen READ strokePen WRITE setStrokePen NOTIFY strokePenChanged)
 
-    ///Містить колір заливки стовпця
+    ///Містить колір заливки
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
     QColor color() const;
     void setColor(const QColor &newColor);
@@ -33,7 +33,7 @@ public:
     const QList<double> &data() const;
     void setData(QList<double> value);
 
-private:
+protected:
     QList<double> pData;
     ChartPen *pStrokePen;
     QColor pColor;

@@ -30,9 +30,7 @@ void BarChart::appendSeries(QQmlListProperty<BarSeries> *seriesList, BarSeries *
     if (chart) {
         series->setParent(chart);
         chart->seriesList.append(series);
-        connect(series, SIGNAL(dataChanged()), chart, SLOT(calculateNumbersOfCategories()));
         connect(series, SIGNAL(dataChanged()), chart, SLOT(calculateDataRange()));
-        chart->calculateNumbersOfCategories();
         chart->calculateDataRange();
         emit chart->seriesChanged();
     }
@@ -61,18 +59,7 @@ void BarChart::paint(QPainter *painter)
     double xAxisLabelsHeight = pXAxis.labelsFont()->getHeight();
     int labelsWidth{pXAxis.getWidthOfMaxLabel()};
     int maxSize {boundingRect().height()};
-    double rotateLabels;
-    if(boundingRect().width()/(pXAxis.labels().length()+1)<labelsWidth){
-        rotateLabels = 45.0;
-        if(boundingRect().width()/(pXAxis.labels().length()+1)<qCos(rotateLabels)*labelsWidth){
-            rotateLabels = 90.0;
-            maxSize -= labelsWidth;
-        } else {
-            maxSize -= qSin(rotateLabels)*labelsWidth;
-        }
-    } else {
-        maxSize -= xAxisLabelsHeight;
-    }
+    maxSize -= xAxisLabelsHeight;
     maxSize -= 5;
     maxSize -= xAxisLabelsHeight;
 
@@ -115,11 +102,8 @@ void BarChart::paint(QPainter *painter)
                       xAxisPosY);
     painter->setFont(pXAxis.labelsFont()->getFont());
     for(int i=0;i<pXAxis.labels().length();i++){
-        if(rotateLabels>0)
-            drawRotatedText(painter, rotateLabels, yAxisPosX+i*valueHop, xAxisPosY+xAxisLabelsHeight, pXAxis.labels()[i]);
-        else
-            painter->drawText(yAxisPosX+i*valueHop, xAxisPosY, valueHop,
-                              xAxisLabelsHeight, Qt::AlignCenter, pXAxis.labels()[i]);
+        painter->drawText(yAxisPosX+i*valueHop, xAxisPosY, valueHop,
+                          xAxisLabelsHeight, Qt::AlignCenter, pXAxis.labels()[i]);
     }
     painter->setPen(pXAxis.gridLines()->getPen());
     for(int i=0;i<pXAxis.labels().length();i++){
@@ -164,15 +148,6 @@ void BarChart::paint(QPainter *painter)
     }
 }
 
-void BarChart::drawRotatedText(QPainter *painter, float degrees, int x, int y, const QString &text)
-{
-    painter->save();
-    painter->translate(x, y);
-    painter->rotate(degrees);
-    painter->drawText(0, 0, text);
-    painter->restore();
-}
-
 void BarChart::calculateDataRange()
 {
     upperValue = std::numeric_limits<int>::min();
@@ -189,13 +164,4 @@ void BarChart::calculateDataRange()
     double offset {(upperValue-loverValue)*0.01};
     upperValue += offset;
     loverValue -= offset;
-}
-
-void BarChart::calculateNumbersOfCategories()
-{
-    int numberOfCategories{1};
-    for(BarSeries* i: seriesList)
-        if(numberOfCategories < i->data().length())
-            numberOfCategories = i->data().length();
-    pXAxis.setNumberOfCategories(numberOfCategories);
 }

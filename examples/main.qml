@@ -16,6 +16,10 @@ ApplicationWindow {
                 onTriggered: loader.source = "AllChartsForm.qml"
             }
             MenuItem {
+                text: qsTr("LineChart")
+                onTriggered: loader.source = "LineChartForm.qml"
+            }
+            MenuItem {
                 text: qsTr("BarChart")
                 onTriggered: loader.source = "BarChartForm.qml"
             }

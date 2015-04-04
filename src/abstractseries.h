@@ -1,7 +1,6 @@
 #ifndef ABSTRACTSERIES_H
 #define ABSTRACTSERIES_H
 
-#include <QQuickPaintedItem>
 #include <QPainter>
 
 ///

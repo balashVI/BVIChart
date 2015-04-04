@@ -11,12 +11,16 @@
 #include "polararea.h"
 #include "polarareachart.h"
 #include "polarraxis.h"
+#include "lineseries.h"
+#include "linechart.h"
 
 #include <qqml.h>
 
 void ChartsPlugin::registerTypes(const char *uri)
 {
     // @uri BVI.Charts
+    qmlRegisterType<LineChart>(uri, 1, 0, "LineChart");
+    qmlRegisterType<LineSeries>(uri, 1, 0, "LineSeries");
     qmlRegisterType<PolarArea>(uri, 1, 0, "PolarArea");
     qmlRegisterType<PolarAreaChart>(uri, 1, 0, "PolarAreaChart");
     qmlRegisterType<PolarRAxis>(uri, 1, 0, "PolarRAxis");

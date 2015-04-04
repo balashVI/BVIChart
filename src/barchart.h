@@ -71,7 +71,7 @@ protected:
     QList<BarSeries *> seriesList;
     CategoryAxis pXAxis;
     StandartAxis pYAxis;
-    void paint(QPainter *painter) override;
+    void virtual paint(QPainter *painter) override;
     void drawRotatedText(QPainter *painter, float degrees, int x, int y, const QString &text); //Малює текст з нахилом
     double upperValue, loverValue;
 
@@ -81,10 +81,8 @@ signals:
     void seriesChanged();
     void xAxisChanged();
     void yAxisChanged();
-private slots:
-    void calculateNumbersOfCategories();
+protected slots:
     void calculateDataRange();
-
 };
 
 #endif // BARCHART_H

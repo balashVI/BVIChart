@@ -20,7 +20,9 @@ SOURCES += main.cpp \
     ../src/xychart.cpp \
     ../src/polarareachart.cpp \
     ../src/polararea.cpp \
-    ../src/polarraxis.cpp
+    ../src/polarraxis.cpp \
+    ../src/lineseries.cpp \
+    ../src/linechart.cpp
 
 RESOURCES += qml.qrc
 
@@ -46,6 +48,8 @@ HEADERS += \
     ../src/xychart.h \
     ../src/polarareachart.h \
     ../src/polararea.h \
-    ../src/polarraxis.h
+    ../src/polarraxis.h \
+    ../src/lineseries.h \
+    ../src/linechart.h
 
 DISTFILES +=

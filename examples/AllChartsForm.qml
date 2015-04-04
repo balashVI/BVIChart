@@ -6,6 +6,10 @@ Rectangle {
     GridLayout{
         anchors.fill: parent
         columns: 3
+        LineChartForm{
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+        }
         BarChartForm{
             Layout.fillHeight: true
             Layout.fillWidth: true

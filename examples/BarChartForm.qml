@@ -2,7 +2,7 @@ import QtQuick 2.4
 import BVI.Charts 1.0
 
 Rectangle {
-    color: "gray"
+    color: "white"
     BarChart{
         anchors.fill: parent
         xAxis.labels: ["first", "second", "third", "fourth"]
@@ -13,12 +13,17 @@ Rectangle {
             },BarSeries{
                 data: [15, 12, 21, 13]
                 color: "#aa66CCFF"
-                strokePen.color: "#5CB8E6"
+                strokePen.color: "#4Ca8d6"
             },BarSeries{
                 data: [25, 22, 11, 30]
                 color: "#aaFF9966"
                 strokePen.color: "#CC7A52"
+            }, BarSeries{
+                data: [23,18,43,35]
+                color: "#aa4C996B"
+                strokePen.color: "#3C895B"
             }
+
         ]
 
     }
