@@ -114,10 +114,28 @@ ChartPen *AbstractAxis::axisLine() const
 void AbstractAxis::setLabels(QList<QString> in)
 {
     pLabels = std::move(in);
+    calculateWidthOfLongestLabel();
     emit labelsChanged();
 }
 
 const QList<QString>& AbstractAxis::labels() const
 {
     return pLabels;
+}
+
+double AbstractAxis::getWidthOfLongestLabel()
+{
+    return widthOfLongestLabel;
+}
+
+void AbstractAxis::calculateWidthOfLongestLabel()
+{
+    int labelWidth;
+    widthOfLongestLabel = 0;
+    QFontMetrics fm = QFontMetrics(pLabelsFont->getFont());
+    for(int i=0;i<pLabels.length();++i){
+        labelWidth = fm.width(pLabels[i]);
+        if(labelWidth > widthOfLongestLabel)
+            widthOfLongestLabel = labelWidth;
+    }
 }

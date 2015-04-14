@@ -2,6 +2,7 @@
 #define ABSTRACTAXIS_H
 
 #include <QQuickItem>
+#include <QFontMetrics>
 #include "chartpen.h"
 #include "chartfont.h"
 
@@ -57,6 +58,8 @@ public:
     void setLabels(QList<QString> in);
     const QList<QString> &labels() const;
 
+    double getWidthOfLongestLabel();
+
 protected:
     QList<QString> pLabels;
     ChartPen *pAxisPen, *pGridLines;
@@ -64,6 +67,9 @@ protected:
     QString pName;
     bool pNameVisible, pLabelsVisible;
     QColor pLabelsColor;
+
+    void calculateWidthOfLongestLabel(); //Обчислює довжину найдовшого підпису
+    int widthOfLongestLabel;
 
 signals:
     void labelsChanged();

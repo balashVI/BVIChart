@@ -2,6 +2,7 @@
 #define ABSTRACTSERIES_H
 
 #include <QPainter>
+#include "chartpen.h"
 
 ///
 /// \brief Базовий клас усіх серій графіків

@@ -27,14 +27,9 @@ public:
     const QList<QString> &labels() const;
     void setLabels(QList<QString> newLabels);
 
-    int getWidthOfMaxLabel();//Повертає довжину найдовшого підпису
-
 private:
     QList<QString> pLabels;
-    int widthOfMaxLabel;
     int pBarValueSpacing, pBarDatasetSpacing;
-
-    void calculateWidthOfMaxLabel(); //Обчислює довжину найдовшого підпису
 
 signals:
     void labelsChanged();

@@ -5,17 +5,6 @@ BarSeries::BarSeries(QObject *parent) :
 {
 }
 
-QColor BarSeries::color() const
-{
-    return pColor;
-}
-
-void BarSeries::setColor(const QColor &newColor)
-{
-    pColor = newColor;
-    emit colorChanged();
-}
-
 ChartPen *BarSeries::strokePen() const
 {
     return pStrokePen;

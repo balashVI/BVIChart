@@ -1,8 +1,7 @@
 #include "categoryaxis.h"
-#include <QFontMetrics>
 
 CategoryAxis::CategoryAxis(QQuickItem *parent) :
-    AbstractAxis(parent), widthOfMaxLabel{0}, pBarValueSpacing{3}, pBarDatasetSpacing{5}
+    AbstractAxis(parent), pBarValueSpacing{3}, pBarDatasetSpacing{5}
 {
 }
 
@@ -36,23 +35,6 @@ const QList<QString> &CategoryAxis::labels() const
 void CategoryAxis::setLabels(QList<QString> newLabels)
 {
     pLabels = std::move(newLabels);
-    calculateWidthOfMaxLabel();
+    calculateWidthOfLongestLabel();
     emit labelsChanged();
-}
-
-int CategoryAxis::getWidthOfMaxLabel()
-{
-    return widthOfMaxLabel;
-}
-
-void CategoryAxis::calculateWidthOfMaxLabel()
-{
-    int labelWidth;
-    widthOfMaxLabel = 0;
-    QFontMetrics fm = QFontMetrics(pLabelsFont->getFont());
-    for(int i=0;i<pLabels.length();++i){
-        labelWidth = fm.width(pLabels[i]);
-        if(labelWidth > widthOfMaxLabel)
-            widthOfMaxLabel = labelWidth;
-    }
 }

@@ -2,7 +2,6 @@
 #define BARSERIES_H
 
 #include "abstractseries.h"
-#include "chartpen.h"
 
 /**
  * @brief Стовпчикова серія
@@ -22,11 +21,6 @@ public:
     ///Містить налаштування лінії обведення
     Q_PROPERTY(ChartPen* strokePen READ strokePen WRITE setStrokePen NOTIFY strokePenChanged)
 
-    ///Містить колір заливки
-    Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
-    QColor color() const;
-    void setColor(const QColor &newColor);
-
     ChartPen* strokePen() const;
     void setStrokePen(ChartPen* value);
 
@@ -36,7 +30,6 @@ public:
 protected:
     QList<double> pData;
     ChartPen *pStrokePen;
-    QColor pColor;
 
 signals:
     void dataChanged();

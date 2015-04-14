@@ -31,6 +31,10 @@ ApplicationWindow {
                 text: qsTr("PolarAreaChart")
                 onTriggered: loader.source = "PolarAreaChartForm.qml"
             }
+            MenuItem {
+                text: qsTr("XYChart")
+                onTriggered: loader.source = "XYChartForm.qml"
+            }
         }
     }
 

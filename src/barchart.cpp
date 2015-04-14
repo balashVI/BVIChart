@@ -57,7 +57,7 @@ void BarChart::paint(QPainter *painter)
     painter->setRenderHints(QPainter::Antialiasing, true);
     //Обчислення додаткових параметрів
     double xAxisLabelsHeight = pXAxis.labelsFont()->getHeight();
-    int labelsWidth{pXAxis.getWidthOfMaxLabel()};
+    int labelsWidth{pXAxis.getWidthOfLongestLabel()};
     int maxSize {boundingRect().height()};
     maxSize -= xAxisLabelsHeight;
     maxSize -= 5;
@@ -84,12 +84,12 @@ void BarChart::paint(QPainter *painter)
         longestText += 10;
     }
 
-    double xAxisLength {boundingRect().width()-longestText-pXAxis.getWidthOfMaxLabel()};
+    double xAxisLength {boundingRect().width()-longestText-pXAxis.getWidthOfLongestLabel()};
     double valueHop = qFloor(xAxisLength/pXAxis.labels().length());
     double barWidth {(valueHop-pXAxis.axisLine()->width()*2 -
                 pXAxis.barValueSpacing()*2 - pXAxis.barDatasetSpacing()*(seriesList.length()-1)) /
                 seriesList.length()};
-    double yAxisPosX {boundingRect().width()-pXAxis.getWidthOfMaxLabel()/2.0-xAxisLength};
+    double yAxisPosX {boundingRect().width()-pXAxis.getWidthOfLongestLabel()/2.0-xAxisLength};
     double xAxisPosY {scaleHeight + xAxisLabelsHeight};
     double scaleHop {qFloor(scaleHeight/pYAxis.labels().length())};
 
@@ -97,8 +97,8 @@ void BarChart::paint(QPainter *painter)
 
     //Малювання осі Х
     painter->setPen(pXAxis.axisLine()->getPen());
-    painter->drawLine(boundingRect().width()-pXAxis.getWidthOfMaxLabel()/2+5,xAxisPosY,
-                      boundingRect().width()-pXAxis.getWidthOfMaxLabel()/2-xAxisLength-5,
+    painter->drawLine(boundingRect().width()-pXAxis.getWidthOfLongestLabel()/2+5,xAxisPosY,
+                      boundingRect().width()-pXAxis.getWidthOfLongestLabel()/2-xAxisLength-5,
                       xAxisPosY);
     painter->setFont(pXAxis.labelsFont()->getFont());
     for(int i=0;i<pXAxis.labels().length();i++){

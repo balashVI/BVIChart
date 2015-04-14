@@ -9,8 +9,6 @@ class StandartAxis : public AbstractAxis
 public:
     explicit StandartAxis(QQuickItem *parent = 0);
 
-private:
-
 signals:
 
 public slots:

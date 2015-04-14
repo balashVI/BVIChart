@@ -22,6 +22,10 @@ Rectangle {
             Layout.fillHeight: true
             Layout.fillWidth: true
         }
+        XYChartForm{
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+        }
     }
 }
 

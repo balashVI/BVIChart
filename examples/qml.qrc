@@ -6,5 +6,6 @@
         <file>AllChartsForm.qml</file>
         <file>PolarAreaChartForm.qml</file>
         <file>LineChartForm.qml</file>
+        <file>XYChartForm.qml</file>
     </qresource>
 </RCC>
