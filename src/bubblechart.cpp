@@ -1,26 +1,47 @@
-#include "xychart.h"
-#include "chartpoint.h"
+#include "bubblechart.h"
 
-XYChart::XYChart(QQuickPaintedItem *parent):
-    BarChart(parent), pXAxis{this}
+BubbleChart::BubbleChart(QQuickPaintedItem *parent):
+    XYChart(parent), pMinBubbleRadius{2}, pMaxBubbleRadius{20}
 {
 
 }
 
-XYChart::~XYChart()
+BubbleChart::~BubbleChart()
 {
 
 }
 
-QQmlListProperty<XYSeries> XYChart::series()
+QQmlListProperty<BubbleSeries> BubbleChart::series()
 {
-    return QQmlListProperty<XYSeries>(this, 0, &XYChart::appendSeries, &XYChart::seriesListLength,
-                                      &XYChart::seriesAt, 0);
+    return QQmlListProperty<BubbleSeries>(this, 0, &BubbleChart::appendSeries, &BubbleChart::seriesListLength,
+                                          &BubbleChart::seriesAt, 0);
 }
 
-void XYChart::appendSeries(QQmlListProperty<XYSeries> *seriesList, XYSeries *series)
+int BubbleChart::maxBubbleRadius() const
 {
-    XYChart *chart = qobject_cast<XYChart *>(seriesList->object);
+    return pMaxBubbleRadius;
+}
+
+void BubbleChart::setMaxBubbleRadius(int value)
+{
+    pMaxBubbleRadius = value;
+    emit maxBubbleRadiusChanged();
+}
+
+int BubbleChart::minBubbleRadius() const
+{
+    return pMinBubbleRadius;
+}
+
+void BubbleChart::setMinBubbleRadius(int value)
+{
+    pMinBubbleRadius = value;
+    emit minBubbleRadiusChanged();
+}
+
+void BubbleChart::appendSeries(QQmlListProperty<BubbleSeries> *seriesList, BubbleSeries *series)
+{
+    BubbleChart *chart = qobject_cast<BubbleChart *>(seriesList->object);
     if (chart) {
         series->setParent(chart);
         chart->seriesList.append(series);
@@ -30,28 +51,27 @@ void XYChart::appendSeries(QQmlListProperty<XYSeries> *seriesList, XYSeries *ser
     }
 }
 
-int XYChart::seriesListLength(QQmlListProperty<XYSeries> *seriesList)
+int BubbleChart::seriesListLength(QQmlListProperty<BubbleSeries> *seriesList)
 {
-    XYChart *chart = qobject_cast<XYChart *>(seriesList->object);
+    BubbleChart *chart = qobject_cast<BubbleChart *>(seriesList->object);
     if(chart)
         return chart->seriesList.length();
     else return 0;
 }
 
-XYSeries *XYChart::seriesAt(QQmlListProperty<XYSeries> *seriesList, int index)
+BubbleSeries *BubbleChart::seriesAt(QQmlListProperty<BubbleSeries> *seriesList, int index)
 {
-    XYChart *series = qobject_cast<XYChart *>(seriesList->object);
+    BubbleChart *series = qobject_cast<BubbleChart *>(seriesList->object);
     if (series) {
         return series->seriesList.at(index);
     } else return nullptr;
 }
 
-void XYChart::paint(QPainter *painter)
+void BubbleChart::paint(QPainter *painter)
 {
     painter->setRenderHints(QPainter::Antialiasing, true);
     //Обчислення додаткових параметрів
     double xAxisLabelsHeight = pXAxis.labelsFont()->getHeight();
-    //    int labelsWidth{pXAxis.getWidthOfMaxLabel()};
 
     int scaleHeight{boundingRect().height()-5-2.0*xAxisLabelsHeight};
     double yMaxSteps = qFloor(scaleHeight/(pYAxis.labelsFont()->getHeight()*0.66));
@@ -113,47 +133,35 @@ void XYChart::paint(QPainter *painter)
 
     //---------------------------------------Малювання графіка------------------------------------
 
+    double valueScale {(pMaxBubbleRadius-pMinBubbleRadius)/(upperValue-loverValue)};
+    double valueShift {pMinBubbleRadius-valueScale*loverValue};
     for(int i=0;i<seriesList.length();++i){
         painter->setPen(seriesList[i]->strokePen()->getPen());
         painter->setBrush(QBrush(seriesList[i]->color()));
-        QPoint points[seriesList[i]->getDataList()->length()];
-        QPolygon poligon;
         for(int j=0;j<seriesList[i]->getDataList()->length();++j){
             double xValueOffset {calculateOffset(seriesList[i]->getDataList()->at(j)->x(),
                                                 xNumberOfSteps, xStepValue, xGraphMin, xScaleHop)};
             double yValueOffset {calculateOffset(seriesList[i]->getDataList()->at(j)->y(),
                                                 yNumberOfSteps, yStepValue, yGraphMin, yScaleHop)};
-            points[j].setX(yAxisPosX+xValueOffset);
-            points[j].setY(xAxisPosY-yValueOffset);
-            poligon << points[j];
-        }
-        painter->drawPolyline(poligon);
-
-        if(seriesList.at(i)->drawPoints()){
-            int padding {seriesList.at(i)->strokePen()->width()*2};
-            painter->setPen(QColor("#00000000"));
-            painter->setBrush(seriesList.at(i)->color());
-            for(QPoint& point: points)
-                painter->drawPie(point.x()-padding, point.y()-padding, padding*2, padding*2, 0, 5760);
-
-            padding = seriesList.at(i)->strokePen()->width();
-            painter->setBrush(seriesList.at(i)->strokePen()->color());
-            for(QPoint& point: points)
-                painter->drawPie(point.x()-padding, point.y()-padding, padding*2, padding*2, 0, 5760);
+            double bubbleRadius {valueScale*seriesList[i]->getDataList()->at(j)->value()+valueShift};
+            painter->drawEllipse(QPoint(yAxisPosX+xValueOffset, xAxisPosY-yValueOffset),
+                                 bubbleRadius, bubbleRadius);
         }
     }
 }
 
-void XYChart::calculateDataRange()
+void BubbleChart::calculateDataRange()
 {
     xUpperValue = std::numeric_limits<int>::min();
     xLoverValue = std::numeric_limits<int>::max();
     yUpperValue = std::numeric_limits<int>::min();
     yLoverValue = std::numeric_limits<int>::max();
+    upperValue = std::numeric_limits<int>::min();
+    loverValue = std::numeric_limits<int>::max();
 
-    double xUpper, xLover, yUpper, yLover;
-    for(XYSeries *i: seriesList){
-        i->getDataRange(xLover, xUpper, yLover, yUpper);
+    double xUpper, xLover, yUpper, yLover, upper, lover;
+    for(BubbleSeries *i: seriesList){
+        i->getDataRange(xLover, xUpper, yLover, yUpper, lover, upper);
         if(xUpper>xUpperValue)
             xUpperValue = xUpper;
         if(xLover<xLoverValue)
@@ -162,13 +170,18 @@ void XYChart::calculateDataRange()
             yUpperValue = yUpper;
         if(yLover<yLoverValue)
             yLoverValue = yLover;
+        if(upper>upperValue)
+            upperValue = upper;
+        if(lover<loverValue)
+            loverValue = lover;
     }
-
     double offset {(xUpperValue-xLoverValue)*0.01};
     xUpperValue += offset;
     xLoverValue -= offset;
     offset = (yUpperValue-yLoverValue)*0.01;
     yUpperValue += offset;
     yLoverValue -= offset;
+    if(upperValue == loverValue)
+        loverValue -= 1;
 }
 

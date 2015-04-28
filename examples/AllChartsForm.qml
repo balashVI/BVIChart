@@ -5,6 +5,7 @@ Rectangle {
     anchors.fill: parent
     GridLayout{
         anchors.fill: parent
+        anchors.margins: 5
         columns: 3
         LineChartForm{
             Layout.fillHeight: true
@@ -23,6 +24,10 @@ Rectangle {
             Layout.fillWidth: true
         }
         XYChartForm{
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+        }
+        BubbleChartForm{
             Layout.fillHeight: true
             Layout.fillWidth: true
         }

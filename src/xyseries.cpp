@@ -3,7 +3,7 @@
 XYSeries::XYSeries(QObject *parent):
     AbstractSeries(parent), pStrokePen{new ChartPen(this)}, pDrawPoints{true}
 {
-    pStrokePen->setWidth(4);
+    pStrokePen->setWidth(3);
 }
 
 XYSeries::~XYSeries()

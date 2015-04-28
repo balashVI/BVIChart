@@ -11,7 +11,7 @@ public:
     explicit XYSeries(QObject *parent = 0);
     ~XYSeries();
 
-    Q_PROPERTY(QQmlListProperty<ChartPoint> data READ data NOTIFY dataChanged())
+    Q_PROPERTY(QQmlListProperty<ChartPoint> data READ data NOTIFY dataChanged)
     QQmlListProperty<ChartPoint> data();
 
     Q_PROPERTY(ChartPen* strokePen READ strokePen WRITE setStrokePen NOTIFY strokePenChanged)
@@ -32,8 +32,6 @@ protected:
     QList<ChartPoint *> dataList;
     ChartPen *pStrokePen;
     bool pDrawPoints;
-
-private:
     double xUpperValue, xLoverValue, yUpperValue, yLoverValue;
 
 signals:
@@ -41,8 +39,8 @@ signals:
     void drawPointsChanged();
     void dataChanged();
 
-protected slots:
-    void calculateDataRange();
+private slots:
+    virtual void calculateDataRange();
 };
 
 #endif // XYSERIES_H

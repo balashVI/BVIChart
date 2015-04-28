@@ -2,7 +2,7 @@
 
 LineSeries::LineSeries(QObject *parent) : BarSeries(parent), pDrawPoints{true}
 {
-    pStrokePen->setWidth(4);
+    pStrokePen->setWidth(3);
 }
 
 bool LineSeries::drawPoints() const

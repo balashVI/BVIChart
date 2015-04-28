@@ -31,7 +31,6 @@ Rectangle {
                 ]
                 color: "#aa7575A3"
                 strokePen.color: "#5C5C8A"
-                strokePen.width: 3
             },
             XYSeries {
                 data: [

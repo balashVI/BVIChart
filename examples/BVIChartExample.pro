@@ -24,7 +24,10 @@ SOURCES += main.cpp \
     ../src/linechart.cpp \
     ../src/chartpoint.cpp \
     ../src/xyseries.cpp \
-    ../src/xychart.cpp
+    ../src/xychart.cpp \
+    ../src/bubble.cpp \
+    ../src/bubbleseries.cpp \
+    ../src/bubblechart.cpp
 
 RESOURCES += qml.qrc
 
@@ -54,6 +57,9 @@ HEADERS += \
     ../src/linechart.h \
     ../src/chartpoint.h \
     ../src/xyseries.h \
-    ../src/xychart.h
+    ../src/xychart.h \
+    ../src/bubble.h \
+    ../src/bubbleseries.h \
+    ../src/bubblechart.h
 
 DISTFILES +=

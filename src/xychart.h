@@ -23,8 +23,6 @@ protected:
     StandartAxis pXAxis;
 
     void virtual paint(QPainter *painter) override;
-
-private:
     double xUpperValue, xLoverValue, yUpperValue, yLoverValue;
 
 signals:

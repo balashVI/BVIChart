@@ -35,6 +35,10 @@ ApplicationWindow {
                 text: qsTr("XYChart")
                 onTriggered: loader.source = "XYChartForm.qml"
             }
+            MenuItem {
+                text: qsTr("BubbleChart")
+                onTriggered: loader.source = "BubbleChartForm.qml"
+            }
         }
     }
 

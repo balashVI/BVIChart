@@ -15,12 +15,18 @@
 #include "chartpoint.h"
 #include "xyseries.h"
 #include "xychart.h"
+#include "bubble.h"
+#include "bubblechart.h"
+#include "bubbleseries.h"
 
 #include <qqml.h>
 
 void ChartsPlugin::registerTypes(const char *uri)
 {
     // @uri BVI.Charts
+    qmlRegisterType<Bubble>(uri, 1, 0, "Bubble");
+    qmlRegisterType<BubbleSeries>(uri, 1, 0, "BubbleSeries");
+    qmlRegisterType<BubbleChart>(uri, 1, 0, "BubbleChart");
     qmlRegisterType<XYChart>(uri, 1, 0, "XYChart");
     qmlRegisterType<XYSeries>(uri, 1, 0, "XYSeries");
     qmlRegisterType<ChartPoint>(uri, 1, 0, "ChartPoint");
