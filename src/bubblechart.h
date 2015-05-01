@@ -21,6 +21,8 @@ public:
     int minBubbleRadius() const;
     void setMinBubbleRadius(int value);
 
+    Q_INVOKABLE virtual QVariantList generateLegend() override;
+
 protected:
     static void appendSeries(QQmlListProperty<BubbleSeries> *seriesList, BubbleSeries *series);
     static int seriesListLength(QQmlListProperty<BubbleSeries> *seriesList);

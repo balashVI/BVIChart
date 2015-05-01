@@ -3,9 +3,9 @@ import QtQuick.Controls 1.3
 import QtQuick.Window 2.2
 
 ApplicationWindow {
-    title: qsTr("Hello World")
-    width: 640
-    height: 480
+    title: qsTr("BVIChart example")
+    width: 1040
+    height: 680
     visible: true
 
     menuBar: MenuBar {

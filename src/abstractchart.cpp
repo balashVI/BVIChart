@@ -7,6 +7,11 @@ AbstractChart::AbstractChart(QQuickPaintedItem *parent) :
     setClip(true);
 }
 
+QVariantList AbstractChart::generateLegend()
+{
+
+}
+
 void AbstractChart::setSpacing(int value)
 {
     if(pSpacing!=value){
@@ -74,4 +79,9 @@ double AbstractChart::calculateOffset(double value, int steps, double stepValue,
     else if(scalingFactor<0)
         scalingFactor = 0;
     return scaleHop*steps*scalingFactor;
+}
+
+void AbstractChart::emitLegendChanged()
+{
+    emit legendChanged();
 }

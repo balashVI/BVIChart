@@ -39,6 +39,21 @@ void BubbleChart::setMinBubbleRadius(int value)
     emit minBubbleRadiusChanged();
 }
 
+QVariantList BubbleChart::generateLegend()
+{
+    QVariantList list;
+    QVariantMap map;
+    for(BubbleSeries *series: seriesList){
+        map.clear();
+        map.insert("name", series->name());
+        map.insert("color", series->color());
+        map.insert("strokeColor", series->strokePen()->color());
+        map.insert("strokeWidth", series->strokePen()->width());
+        list.append(map);
+    }
+    return list;
+}
+
 void BubbleChart::appendSeries(QQmlListProperty<BubbleSeries> *seriesList, BubbleSeries *series)
 {
     BubbleChart *chart = qobject_cast<BubbleChart *>(seriesList->object);

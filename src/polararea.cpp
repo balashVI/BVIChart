@@ -3,5 +3,5 @@
 PolarArea::PolarArea(QQuickItem *parent) :
     PieSlice(parent)
 {
-
+    pName = "Area";
 }

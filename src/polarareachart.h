@@ -30,6 +30,8 @@ public:
     double angleOffset() const;
     void setAngleOffset(double value);
 
+    Q_INVOKABLE virtual QVariantList generateLegend() override;
+
 protected:
     static void appendPolarArea(QQmlListProperty<PolarArea> *polarAreasList, PolarArea *polarArea);
     static int polarAreasListLength(QQmlListProperty<PolarArea> *polarAreasList);

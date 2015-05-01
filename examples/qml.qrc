@@ -8,5 +8,6 @@
         <file>LineChartForm.qml</file>
         <file>XYChartForm.qml</file>
         <file>BubbleChartForm.qml</file>
+        <file>ChartLegend.qml</file>
     </qresource>
 </RCC>

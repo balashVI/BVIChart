@@ -44,6 +44,19 @@ void PolarAreaChart::setAngleOffset(double value)
     emit angleOffsetChanged();
 }
 
+QVariantList PolarAreaChart::generateLegend()
+{
+    QVariantList list;
+    QVariantMap map;
+    for(PolarArea *area: polarAreasList){
+        map.clear();
+        map.insert("name", area->name());
+        map.insert("color", area->color());
+        list.append(map);
+    }
+    return list;
+}
+
 void PolarAreaChart::appendPolarArea(QQmlListProperty<PolarArea> *polarAreasList, PolarArea *polarArea)
 {
     PolarAreaChart *chart = qobject_cast<PolarAreaChart *>(polarAreasList->object);

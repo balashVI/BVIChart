@@ -34,7 +34,6 @@ protected:
 signals:
     void dataChanged();
     void strokePenChanged();
-    void colorChanged();
 
 public slots:
 

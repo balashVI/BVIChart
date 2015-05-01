@@ -39,6 +39,19 @@ void PieChart::setAngleOffset(double value)
     emit angleOffsetChanged();
 }
 
+QVariantList PieChart::generateLegend()
+{
+    QVariantList list;
+    QVariantMap map;
+    for(PieSlice *slice: slicesList){
+        map.clear();
+        map.insert("name", slice->name());
+        map.insert("color", slice->color());
+        list.append(map);
+    }
+    return list;
+}
+
 void PieChart::appendSlice(QQmlListProperty<PieSlice> *slicesList, PieSlice *slice)
 {
     PieChart *chart = qobject_cast<PieChart *>(slicesList->object);

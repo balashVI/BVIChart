@@ -24,13 +24,31 @@ StandartAxis *BarChart::yAxis()
     return &pYAxis;
 }
 
+QVariantList BarChart::generateLegend()
+{
+    QVariantList list;
+    QVariantMap map;
+    for(BarSeries *series: seriesList){
+        map.clear();
+        map.insert("name", series->name());
+        map.insert("color", series->color());
+        map.insert("strokeColor", series->strokePen()->color());
+        map.insert("strokeWidth", series->strokePen()->width());
+        list.append(map);
+    }
+    return list;
+}
+
 void BarChart::appendSeries(QQmlListProperty<BarSeries> *seriesList, BarSeries *series)
 {
     BarChart *chart = qobject_cast<BarChart *>(seriesList->object);
     if (chart) {
         series->setParent(chart);
         chart->seriesList.append(series);
-        connect(series, SIGNAL(dataChanged()), chart, SLOT(calculateDataRange()));
+        connect(series, &BarSeries::dataChanged, chart, &BarChart::calculateDataRange);
+        connect(series, &BarSeries::nameChanged, chart, &BarChart::emitLegendChanged);
+        connect(series, &BarSeries::colorChanged, chart, &BarChart::emitLegendChanged);
+        chart->emitLegendChanged();
         chart->calculateDataRange();
         emit chart->seriesChanged();
     }
@@ -165,3 +183,4 @@ void BarChart::calculateDataRange()
     upperValue += offset;
     loverValue -= offset;
 }
+

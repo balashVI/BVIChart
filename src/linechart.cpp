@@ -16,6 +16,21 @@ QQmlListProperty<LineSeries> LineChart::series()
                                         &LineChart::seriesAt, 0);
 }
 
+QVariantList LineChart::generateLegend()
+{
+    QVariantList list;
+    QVariantMap map;
+    for(LineSeries *series: seriesList){
+        map.clear();
+        map.insert("name", series->name());
+        map.insert("color", series->color());
+        map.insert("strokeColor", series->strokePen()->color());
+        map.insert("strokeWidth", series->strokePen()->width());
+        list.append(map);
+    }
+    return list;
+}
+
 void LineChart::appendSeries(QQmlListProperty<LineSeries> *seriesList, LineSeries *series)
 {
     LineChart *chart = qobject_cast<LineChart *>(seriesList->object);

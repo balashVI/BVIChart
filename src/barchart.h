@@ -64,6 +64,8 @@ public:
     Q_PROPERTY(StandartAxis* yAxis READ yAxis NOTIFY yAxisChanged)
     StandartAxis* yAxis();
 
+    Q_INVOKABLE virtual QVariantList generateLegend();
+
 protected:
     static void appendSeries(QQmlListProperty<BarSeries> *seriesList, BarSeries *series);
     static int seriesListLength(QQmlListProperty<BarSeries> *seriesList);

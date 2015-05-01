@@ -18,6 +18,21 @@ QQmlListProperty<XYSeries> XYChart::series()
                                       &XYChart::seriesAt, 0);
 }
 
+QVariantList XYChart::generateLegend()
+{
+    QVariantList list;
+    QVariantMap map;
+    for(XYSeries *series: seriesList){
+        map.clear();
+        map.insert("name", series->name());
+        map.insert("color", series->color());
+        map.insert("strokeColor", series->strokePen()->color());
+        map.insert("strokeWidth", series->strokePen()->width());
+        list.append(map);
+    }
+    return list;
+}
+
 void XYChart::appendSeries(QQmlListProperty<XYSeries> *seriesList, XYSeries *series)
 {
     XYChart *chart = qobject_cast<XYChart *>(seriesList->object);

@@ -20,6 +20,8 @@ public:
     /// Ця вдастивість задає відстань між компонентами графіка
     Q_PROPERTY(int spacing READ spacing WRITE setSpacing NOTIFY spacingChanged)
 
+    virtual QVariantList generateLegend();
+
     void setSpacing(int value);
     int spacing() const;
 
@@ -36,6 +38,10 @@ protected:
 
 signals:
     void spacingChanged();
+    void legendChanged();
+
+protected slots:
+    void emitLegendChanged();
 };
 
 #endif // ABSTRACTCHART_H

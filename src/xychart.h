@@ -14,6 +14,8 @@ public:
     Q_PROPERTY(QQmlListProperty<XYSeries> series READ series NOTIFY seriesChanged)
     QQmlListProperty<XYSeries> series();
 
+    Q_INVOKABLE virtual QVariantList generateLegend() override;
+
 protected:
     static void appendSeries(QQmlListProperty<XYSeries> *seriesList, XYSeries *series);
     static int seriesListLength(QQmlListProperty<XYSeries> *seriesList);

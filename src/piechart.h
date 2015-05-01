@@ -43,6 +43,8 @@ public:
     double angleOffset() const;
     void setAngleOffset(double value);
 
+    Q_INVOKABLE virtual QVariantList generateLegend() override;
+
 protected:
     static void appendSlice(QQmlListProperty<PieSlice> *slicesList, PieSlice *slice);
     static int slicesListLength(QQmlListProperty<PieSlice> *slicesList);
