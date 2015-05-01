@@ -12,14 +12,22 @@ SOURCES += main.cpp \
     ../src/barseries.cpp \
     ../src/categoryaxis.cpp \
     ../src/chartfont.cpp \
-    ../src/chartheader.cpp \
-    ../src/chartlegend.cpp \
     ../src/chartpen.cpp \
     ../src/charts_plugin.cpp \
     ../src/piechart.cpp \
     ../src/pieslice.cpp \
     ../src/standartaxis.cpp \
-    ../src/xychart.cpp
+    ../src/polarareachart.cpp \
+    ../src/polararea.cpp \
+    ../src/polarraxis.cpp \
+    ../src/lineseries.cpp \
+    ../src/linechart.cpp \
+    ../src/chartpoint.cpp \
+    ../src/xyseries.cpp \
+    ../src/xychart.cpp \
+    ../src/bubble.cpp \
+    ../src/bubbleseries.cpp \
+    ../src/bubblechart.cpp
 
 RESOURCES += qml.qrc
 
@@ -37,11 +45,21 @@ HEADERS += \
     ../src/barseries.h \
     ../src/categoryaxis.h \
     ../src/chartfont.h \
-    ../src/chartheader.h \
-    ../src/chartlegend.h \
     ../src/chartpen.h \
     ../src/charts_plugin.h \
     ../src/piechart.h \
     ../src/pieslice.h \
     ../src/standartaxis.h \
-    ../src/xychart.h
+    ../src/polarareachart.h \
+    ../src/polararea.h \
+    ../src/polarraxis.h \
+    ../src/lineseries.h \
+    ../src/linechart.h \
+    ../src/chartpoint.h \
+    ../src/xyseries.h \
+    ../src/xychart.h \
+    ../src/bubble.h \
+    ../src/bubbleseries.h \
+    ../src/bubblechart.h
+
+DISTFILES +=

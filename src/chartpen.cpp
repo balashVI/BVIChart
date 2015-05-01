@@ -3,6 +3,7 @@
 ChartPen::ChartPen(QObject *parent) :
     QObject(parent), pVisible{true}
 {
+    pen.setColor("#444444");
 }
 
 int ChartPen::width() const

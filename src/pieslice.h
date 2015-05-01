@@ -3,6 +3,7 @@
 
 #include <QQuickItem>
 #include <QColor>
+#include "chartpen.h"
 
 /**
  * @brief Сегмент PieChart
@@ -22,21 +23,11 @@ public:
     ///Задає назву сегмента
     Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY labelChanged)
 
-    ///Якщо FALSE сегмент не буде малюватися
-    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-
     ///Задає колір мегмента
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
 
-    ///Задає колір сегмента у випадку коли він активний
-    Q_PROPERTY(QColor highlightColor READ highlightColor WRITE setHighlightColor NOTIFY highlightColorChanged)
-
-    void setHighlightColor(const QColor & value);
-    const QColor& highlightColor() const;
     void setColor(const QColor& value);
     const QColor& color() const;
-    void setEnabled(bool value);
-    bool enabled() const;
     void setLabel(const QString &value);
     const QString& label() const;
     double value() const;
@@ -45,17 +36,12 @@ public:
 private:
     double pValue;
     QString pLabel;
-    bool pEnabled;
     QColor pColor;
-    QColor pHighlightColor;
 
 signals:
-    void changed();
     void valueChanged();
     void labelChanged();
-    void enabledChanged();
     void colorChanged();
-    void highlightColorChanged();
 
 public slots:
 

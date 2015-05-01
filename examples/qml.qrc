@@ -2,5 +2,11 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>BarChartForm.qml</file>
+        <file>PieChartForm.qml</file>
+        <file>AllChartsForm.qml</file>
+        <file>PolarAreaChartForm.qml</file>
+        <file>LineChartForm.qml</file>
+        <file>XYChartForm.qml</file>
+        <file>BubbleChartForm.qml</file>
     </qresource>
 </RCC>

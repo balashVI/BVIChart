@@ -1,54 +1,31 @@
 import QtQuick 2.4
 import BVI.Charts 1.0
-import QtQuick.Dialogs 1.2
-import QtQuick.Controls 1.2
-import QtQuick.Layouts 1.1
 
-Item {
-    function openDialog(){
-        dialog.open();
-    }
-
-    anchors.fill: parent
+Rectangle {
+    color: "white"
     BarChart{
         anchors.fill: parent
+        xAxis.labels: ["first", "second", "third", "fourth"]
         series: [BarSeries{
-
+                data: [10, 20, 31]
+                color: "#aa7575A3"
+                strokePen.color: "#5C5C8A"
+            },BarSeries{
+                data: [15, 12, 21, 13]
+                color: "#aa66CCFF"
+                strokePen.color: "#4Ca8d6"
+            },BarSeries{
+                data: [25, 22, 11, 30]
+                color: "#aaFF9966"
+                strokePen.color: "#CC7A52"
+            }, BarSeries{
+                data: [23,18,43,35]
+                color: "#aa4C996B"
+                strokePen.color: "#3C895B"
             }
 
         ]
 
-    }
-
-    Dialog{
-        id: dialog
-        title: qsTr("BarChart options")
-        visible: true
-        contentItem: Rectangle {
-                id: dialogRoot
-                implicitWidth: 200
-                implicitHeight: 500
-                ScrollView{
-                    anchors.fill: parent
-
-                    contentItem: ColumnLayout{
-                        width: dialogRoot.width
-                        GroupBox{
-                            Layout.fillWidth: true
-                            title: qsTr("Header")
-                            GridLayout{
-                                columns: 2
-                                anchors.fill: parent
-                                Text{text:qsTr("Text")}
-                                TextField{
-                                    Layout.column: 1
-                                    Layout.fillWidth: true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
     }
 }
 

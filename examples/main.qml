@@ -12,15 +12,32 @@ ApplicationWindow {
         Menu {
             title: qsTr("&Тип графіка")
             MenuItem {
-                text: qsTr("Стовпчикковий графік")
-                onTriggered: loader.source = "BarChartForm.ui.qml";
+                text: qsTr("AllCharts")
+                onTriggered: loader.source = "AllChartsForm.qml"
             }
-        }
-        Menu{
-            title: qsTr("Засоби")
-            MenuItem{
-                text: qsTr("Властивості графіка")
-                onTriggered: loader.item.openDialog();
+            MenuItem {
+                text: qsTr("LineChart")
+                onTriggered: loader.source = "LineChartForm.qml"
+            }
+            MenuItem {
+                text: qsTr("BarChart")
+                onTriggered: loader.source = "BarChartForm.qml"
+            }
+            MenuItem {
+                text: qsTr("PieChart")
+                onTriggered: loader.source = "PieChartForm.qml"
+            }
+            MenuItem {
+                text: qsTr("PolarAreaChart")
+                onTriggered: loader.source = "PolarAreaChartForm.qml"
+            }
+            MenuItem {
+                text: qsTr("XYChart")
+                onTriggered: loader.source = "XYChartForm.qml"
+            }
+            MenuItem {
+                text: qsTr("BubbleChart")
+                onTriggered: loader.source = "BubbleChartForm.qml"
             }
         }
     }
@@ -29,6 +46,6 @@ ApplicationWindow {
         id: loader
         anchors.fill: parent
         active: true
-        source: "BarChartForm.qml"
+        source: "AllChartsForm.qml"
     }
 }

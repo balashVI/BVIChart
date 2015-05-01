@@ -1,23 +1,35 @@
-#ifndef XYChart_H
-#define XYChart_H
+#ifndef XYCHART_H
+#define XYCHART_H
 
-#include <QQuickItem>
-#include "chartheader.h"
-#include "abstractchart.h"
+#include "barchart.h"
+#include "xyseries.h"
 
-class XYChart : public AbstractChart
+class XYChart : public BarChart
 {
     Q_OBJECT
 public:
-    explicit XYChart(QQuickItem *parent = 0);
+    explicit XYChart(QQuickPaintedItem *parent = 0);
+    ~XYChart();
 
-private:
+    Q_PROPERTY(QQmlListProperty<XYSeries> series READ series NOTIFY seriesChanged)
+    QQmlListProperty<XYSeries> series();
 
+protected:
+    static void appendSeries(QQmlListProperty<XYSeries> *seriesList, XYSeries *series);
+    static int seriesListLength(QQmlListProperty<XYSeries> *seriesList);
+    static XYSeries *seriesAt(QQmlListProperty<XYSeries> *seriesList, int index);
+    QList<XYSeries *> seriesList;
+
+    StandartAxis pXAxis;
+
+    void virtual paint(QPainter *painter) override;
+    double xUpperValue, xLoverValue, yUpperValue, yLoverValue;
 
 signals:
+    void seriesChanged();
 
-public slots:
-
+protected slots:
+    void calculateDataRange();
 };
 
-#endif // XYChart_H
+#endif // XYCHART_H

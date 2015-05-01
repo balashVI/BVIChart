@@ -2,11 +2,11 @@
 #include <QDebug>
 
 AbstractAxis::AbstractAxis(QQuickItem *parent) :
-    QQuickPaintedItem(parent), pAxisPen{new ChartPen(this)}, pMajorLines{new ChartPen(this)},
-    pMinorLines{new ChartPen(this)}, pLabelsFont{new ChartFont(this)}, pNameFont{new ChartFont(this)},
+    QQuickItem(parent), pAxisPen{new ChartPen(this)}, pGridLines{new ChartPen(this)},
+    pLabelsFont{new ChartFont(this)}, pNameFont{new ChartFont(this)},
     pNameVisible{true}, pLabelsVisible{true}
 {
-    pLabelsFont->setPointSize(11);
+    pLabelsFont->setPointSize(9);
     pNameFont->setPointSize(12);
     pNameFont->setBold(true);
 }
@@ -22,15 +22,15 @@ bool AbstractAxis::labelsVisible() const
     return pLabelsVisible;
 }
 
-void AbstractAxis::setNameColor(const QColor &value)
+void AbstractAxis::setLabelsColor(const QColor &value)
 {
-    pNameColor = value;
-    emit nameColorChanged();
+    pLabelsColor = value;
+    emit labelsColorChanged();
 }
 
-const QColor &AbstractAxis::nameColor() const
+const QColor &AbstractAxis::labelsColor() const
 {
-    return pNameColor;
+    return pLabelsColor;
 }
 
 void AbstractAxis::setNameVisible(bool value)
@@ -83,32 +83,18 @@ ChartFont *AbstractAxis::labelsFont() const
     return pLabelsFont;
 }
 
-void AbstractAxis::setMinorLines(ChartPen *value)
+void AbstractAxis::setGridLines(ChartPen *value)
 {
     if(value){
-        pMinorLines->deleteLater();
-        pMinorLines=value;
-        emit minorLinesChanged();
+        pGridLines->deleteLater();
+        pGridLines=value;
+        emit gridLinesChanged();
     }
 }
 
-ChartPen *AbstractAxis::minorLines() const
+ChartPen *AbstractAxis::gridLines() const
 {
-    return pMinorLines;
-}
-
-void AbstractAxis::setMajorLines(ChartPen *value)
-{
-    if(value){
-        pMajorLines->deleteLater();
-        pMajorLines=value;
-        emit majorLinesChanged();
-    }
-}
-
-ChartPen *AbstractAxis::majorLines() const
-{
-    return pMajorLines;
+    return pGridLines;
 }
 
 void AbstractAxis::setAxisLine(ChartPen *value)
@@ -128,10 +114,28 @@ ChartPen *AbstractAxis::axisLine() const
 void AbstractAxis::setLabels(QList<QString> in)
 {
     pLabels = std::move(in);
+    calculateWidthOfLongestLabel();
     emit labelsChanged();
 }
 
 const QList<QString>& AbstractAxis::labels() const
 {
     return pLabels;
+}
+
+double AbstractAxis::getWidthOfLongestLabel()
+{
+    return widthOfLongestLabel;
+}
+
+void AbstractAxis::calculateWidthOfLongestLabel()
+{
+    int labelWidth;
+    widthOfLongestLabel = 0;
+    QFontMetrics fm = QFontMetrics(pLabelsFont->getFont());
+    for(int i=0;i<pLabels.length();++i){
+        labelWidth = fm.width(pLabels[i]);
+        if(labelWidth > widthOfLongestLabel)
+            widthOfLongestLabel = labelWidth;
+    }
 }

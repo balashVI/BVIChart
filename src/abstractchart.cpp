@@ -1,66 +1,16 @@
 #include "abstractchart.h"
 #include <QDebug>
 
-AbstractChart::AbstractChart(QQuickItem *parent) :
-    QQuickItem(parent), pHeader{this}, pLegend{this}, pSpacing{10}
+AbstractChart::AbstractChart(QQuickPaintedItem *parent) :
+    QQuickPaintedItem(parent), pSpacing{10}
 {
-    qDebug() << (pHeader.parentItem() == this);
     setClip(true);
-    connect(&pHeader, SIGNAL(sizeChanged()), this, SLOT(updateChildrenGeometry()));
-    connect(&pLegend, SIGNAL(locationChanged()), this, SLOT(updateChildrenGeometry()));
-}
-
-ChartHeader *AbstractChart::header()
-{
-    return &pHeader;
-}
-
-ChartLegend *AbstractChart::legend()
-{
-    return &pLegend;
-}
-
-void AbstractChart::updateChildrenGeometry()
-{
-    pHeader.setPosition(QPoint((width()-pHeader.width())/2, pSpacing));
-    //Визначення координат та розмірів ChartLegend
-    switch (pLegend.location()) {
-    case (ChartLegend::RightLocation):
-        pLegend.recalculateSize(height()-3*pSpacing-pHeader.height());
-        pLegend.setX(x()+width()-pSpacing-pLegend.width());
-        pLegend.setY(pHeader.y()+pHeader.height()+pSpacing);
-        break;
-    case(ChartLegend::LeftLocation):
-        pLegend.recalculateSize(height()-3*pSpacing-pHeader.height());
-        pLegend.setX(pSpacing);
-        pLegend.setY(pHeader.y()+pHeader.height()+pSpacing);
-        break;
-    case(ChartLegend::TopLocation):
-        pLegend.recalculateSize(width()-2*pSpacing);
-        pLegend.setX(pSpacing);
-        pLegend.setY(pHeader.y()+pHeader.height()+pSpacing);
-        break;
-    case(ChartLegend::BottomLocation):
-        pLegend.recalculateSize(width()-2*pSpacing);
-        pLegend.setX(pSpacing);
-        pLegend.setY(y()+height()-pSpacing-pLegend.height());
-        break;
-    default:
-        pLegend.recalculateSize(0);
-        break;
-    }
-}
-
-void AbstractChart::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
-{
-    updateChildrenGeometry();
 }
 
 void AbstractChart::setSpacing(int value)
 {
     if(pSpacing!=value){
         pSpacing = value;
-        updateChildrenGeometry();
         emit spacingChanged();
     }
 }
@@ -68,4 +18,60 @@ void AbstractChart::setSpacing(int value)
 int AbstractChart::spacing() const
 {
     return pSpacing;
+}
+
+void AbstractChart::paint(QPainter *painter)
+{
+
+}
+
+double AbstractChart::calculateOrderOfMagnitude(double x)
+{
+    return qFloor(log(x)/log(10));
+}
+
+void AbstractChart::calculateScale(double drawingHeight, double maxSteps, double minSteps, double maxValue, double minValue,
+                                   int &numberOfSteps, double &stepValue, double &graphMin)
+{
+    double valueRange {maxValue - minValue};
+    stepValue = pow(10, calculateOrderOfMagnitude(valueRange));
+    graphMin = floor(minValue/stepValue)*stepValue;
+    double graphMax {ceil(maxValue/stepValue)*stepValue};
+    double graphRange {graphMax-graphMin};
+    numberOfSteps = qRound(graphRange/stepValue);
+    if(!numberOfSteps) numberOfSteps=1;
+    while(numberOfSteps<minSteps || numberOfSteps>maxSteps){
+        if(numberOfSteps<minSteps){
+            stepValue /= 2.0;
+            numberOfSteps = qRound(graphRange/stepValue);
+        } else {
+            stepValue *= 2.0;
+            numberOfSteps = qRound(graphRange/stepValue);
+        }
+    }
+}
+
+QList<QString> AbstractChart::populateLabels(int numberOfSteps, double graphMin, double stepValue)
+{
+    QList<QString> res = QList<QString>();
+    int numberOfDecimalPlaces;
+    double intpart;
+    if(modf(stepValue, &intpart)!=0)
+        numberOfDecimalPlaces=QString::number(stepValue).split('.')[1].length();
+    else
+        numberOfDecimalPlaces=0;
+    for(int i=0;i<numberOfSteps;++i){
+        res.push_back(QString::number(graphMin + stepValue*i, 'f', numberOfDecimalPlaces));
+    }
+    return res;
+}
+
+double AbstractChart::calculateOffset(double value, int steps, double stepValue, double graphMin, double scaleHop)
+{
+    double scalingFactor {(value-graphMin)/(steps*stepValue)};
+    if(scalingFactor>1)
+        scalingFactor = 1;
+    else if(scalingFactor<0)
+        scalingFactor = 0;
+    return scaleHop*steps*scalingFactor;
 }

@@ -1,12 +1,12 @@
 #ifndef ABSTRACTAXIS_H
 #define ABSTRACTAXIS_H
 
-#include <QQuickPaintedItem>
-#include <QPainter>
+#include <QQuickItem>
+#include <QFontMetrics>
 #include "chartpen.h"
 #include "chartfont.h"
 
-class AbstractAxis : public QQuickPaintedItem
+class AbstractAxis : public QQuickItem
 {
     Q_OBJECT
 public:
@@ -18,11 +18,8 @@ public:
     ///Містить налаштування лінії осі
     Q_PROPERTY(ChartPen* axisLine READ axisLine WRITE setAxisLine NOTIFY axisLineChanged)
 
-    ///Містить налаштування основних ліній сітки
-    Q_PROPERTY(ChartPen* majorLines READ majorLines WRITE setMajorLines NOTIFY majorLinesChanged)
-
-    ///Містить налаштування допоміжних ліній сітки
-    Q_PROPERTY(ChartPen* minorLines READ minorLines WRITE setMinorLines NOTIFY minorLinesChanged)
+    ///Містить налаштування ліній сітки
+    Q_PROPERTY(ChartPen* gridLines READ gridLines WRITE setGridLines NOTIFY gridLinesChanged)
 
     ///Містить налаштування шрифту міток осі
     Q_PROPERTY(ChartFont* labelsFont READ labelsFont WRITE setLabelsFont NOTIFY labelsFontChanged)
@@ -36,16 +33,16 @@ public:
     ///Керує відображенням назви осі
     Q_PROPERTY(bool nameVisible READ nameVisible WRITE setNameVisible NOTIFY nameVisibleChanged)
 
-    ///Містить колір назви осі
-    Q_PROPERTY(QColor nameColor READ nameColor WRITE setNameColor NOTIFY nameColorChanged)
+    ///Містить колір міток
+    Q_PROPERTY(QColor labelsColor READ labelsColor WRITE setLabelsColor NOTIFY labelsColorChanged)
 
     ///Вмикає/вимикає відображення підписів осі
     Q_PROPERTY(bool labelsVisible READ labelsVisible WRITE setLabelsVisible NOTIFY labelsVisibleChanged)
 
     void setLabelsVisible(bool value);
     bool labelsVisible() const;
-    void setNameColor(const QColor& value);
-    const QColor& nameColor() const;
+    void setLabelsColor(const QColor& value);
+    const QColor& labelsColor() const;
     void setNameVisible(bool value);
     bool nameVisible() const;
     void setNameFont(ChartFont* value);
@@ -54,33 +51,35 @@ public:
     void setName(QString value);
     void setLabelsFont(ChartFont* value);
     ChartFont* labelsFont() const;
-    void setMinorLines(ChartPen* value);
-    ChartPen* minorLines() const;
-    void setMajorLines(ChartPen* value);
-    ChartPen* majorLines() const;
+    void setGridLines(ChartPen* value);
+    ChartPen* gridLines() const;
     void setAxisLine(ChartPen* value);
     ChartPen* axisLine() const;
     void setLabels(QList<QString> in);
     const QList<QString> &labels() const;
 
+    double getWidthOfLongestLabel();
+
 protected:
     QList<QString> pLabels;
-    ChartPen *pAxisPen, *pMajorLines, *pMinorLines;
+    ChartPen *pAxisPen, *pGridLines;
     ChartFont *pLabelsFont, *pNameFont;
     QString pName;
     bool pNameVisible, pLabelsVisible;
-    QColor pNameColor;
+    QColor pLabelsColor;
+
+    void calculateWidthOfLongestLabel(); //Обчислює довжину найдовшого підпису
+    int widthOfLongestLabel;
 
 signals:
     void labelsChanged();
     void axisLineChanged();
-    void majorLinesChanged();
-    void minorLinesChanged();
+    void gridLinesChanged();
     void labelsFontChanged();
     void nameChanged();
     void nameFontChanged();
     void nameVisibleChanged();
-    void nameColorChanged();
+    void labelsColorChanged();
     void labelsVisibleChanged();
 
 public slots:

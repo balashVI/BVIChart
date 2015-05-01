@@ -13,22 +13,28 @@ class BarSeries : public AbstractSeries
     Q_OBJECT
 public:
     ///Конструктор класу
-    explicit BarSeries(QQuickItem *parent = 0);
+    explicit BarSeries(QObject *parent = 0);
 
     ///Містить список даних
     Q_PROPERTY(QList<double> data READ data WRITE setData NOTIFY dataChanged)
 
+    ///Містить налаштування лінії обведення
+    Q_PROPERTY(ChartPen* strokePen READ strokePen WRITE setStrokePen NOTIFY strokePenChanged)
+
+    ChartPen* strokePen() const;
+    void setStrokePen(ChartPen* value);
+
     const QList<double> &data() const;
     void setData(QList<double> value);
 
-private:
-    QList<double> pData;
-
 protected:
-    virtual void paint(QPainter *painter);
+    QList<double> pData;
+    ChartPen *pStrokePen;
 
 signals:
     void dataChanged();
+    void strokePenChanged();
+    void colorChanged();
 
 public slots:
 

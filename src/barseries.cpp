@@ -1,8 +1,22 @@
 #include "barseries.h"
 
-BarSeries::BarSeries(QQuickItem *parent) :
-    AbstractSeries(parent)
+BarSeries::BarSeries(QObject *parent) :
+    AbstractSeries(parent), pStrokePen{new ChartPen(this)}
 {
+}
+
+ChartPen *BarSeries::strokePen() const
+{
+    return pStrokePen;
+}
+
+void BarSeries::setStrokePen(ChartPen *value)
+{
+    if(value){
+        pStrokePen->deleteLater();
+        pStrokePen=value;
+        emit strokePenChanged();
+    }
 }
 
 const QList<double> &BarSeries::data() const
@@ -14,12 +28,4 @@ void BarSeries::setData(QList<double> value)
 {
     pData = std::move(value);
     emit dataChanged();
-}
-
-void BarSeries::paint(QPainter *painter)
-{
-    if(parent()->inherits("BarChart")){
-            painter->setBrush(QBrush(QColor("#11111111")));
-            painter->drawRect(QRect(0, 0, width()-1,height()));
-    }
 }
