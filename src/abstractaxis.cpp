@@ -138,4 +138,5 @@ void AbstractAxis::calculateWidthOfLongestLabel()
         if(labelWidth > widthOfLongestLabel)
             widthOfLongestLabel = labelWidth;
     }
+    widthOfLongestLabel += 10;
 }

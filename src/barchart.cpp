@@ -89,27 +89,16 @@ void BarChart::paint(QPainter *painter)
     int numberOfSteps;
     double stepValue, graphMin;
     calculateScale(scaleHeight, maxSteps, minSteps, upperValue, loverValue, numberOfSteps, stepValue, graphMin);
-    pYAxis.setLabels(populateLabels(numberOfSteps, graphMin, stepValue));
+    pYAxis.setLabels(populateLabels(numberOfSteps+1, graphMin, stepValue));
 
-    int longestText = 1;
-    if(pXAxis.labelsVisible()){
-        QFontMetrics fm = QFontMetrics(pYAxis.labelsFont()->getFont());
-        for(int i=0;i<pYAxis.labels().length();++i){
-            int labelWidth = fm.width(pYAxis.labels()[i]);
-            if(labelWidth > longestText)
-                longestText = labelWidth;
-        }
-        longestText += 10;
-    }
-
-    double xAxisLength {boundingRect().width()-longestText-pXAxis.getWidthOfLongestLabel()};
+    double xAxisLength {boundingRect().width()-pYAxis.getWidthOfLongestLabel()-pXAxis.getWidthOfLongestLabel()};
     double valueHop = qFloor(xAxisLength/pXAxis.labels().length());
     double barWidth {(valueHop-pXAxis.axisLine()->width()*2 -
                 pXAxis.barValueSpacing()*2 - pXAxis.barDatasetSpacing()*(seriesList.length()-1)) /
                 seriesList.length()};
     double yAxisPosX {boundingRect().width()-pXAxis.getWidthOfLongestLabel()/2.0-xAxisLength};
     double xAxisPosY {scaleHeight + xAxisLabelsHeight};
-    double scaleHop {qFloor(scaleHeight/pYAxis.labels().length())};
+    double scaleHop {qFloor(scaleHeight/numberOfSteps)};
 
     //--------------------Малювання осей та сітки-------------------------------
 
@@ -120,7 +109,7 @@ void BarChart::paint(QPainter *painter)
                       xAxisPosY);
     painter->setFont(pXAxis.labelsFont()->getFont());
     for(int i=0;i<pXAxis.labels().length();i++){
-        painter->drawText(yAxisPosX+i*valueHop, xAxisPosY, valueHop,
+        painter->drawText(yAxisPosX+i*valueHop, xAxisPosY+4, valueHop,
                           xAxisLabelsHeight, Qt::AlignCenter, pXAxis.labels()[i]);
     }
     painter->setPen(pXAxis.gridLines()->getPen());
@@ -129,18 +118,7 @@ void BarChart::paint(QPainter *painter)
     }
 
     //Малювання осі У
-    painter->setPen(pYAxis.axisLine()->getPen());
-    painter->drawLine(yAxisPosX, xAxisPosY+5, yAxisPosX, 5);
-    painter->setPen(pYAxis.gridLines()->getPen());
-    for(int i=0;i<pYAxis.labels().length();++i){
-        painter->drawLine(yAxisPosX-3,xAxisPosY-(i+1)*scaleHop, yAxisPosX+xAxisLength+5,
-                          xAxisPosY-(i+1)*scaleHop);
-    }
-    painter->setFont(pYAxis.labelsFont()->getFont());
-    for(int i=0;i<pYAxis.labels().length();++i){
-        painter->drawText(yAxisPosX-5-longestText, xAxisPosY-(i+1)*scaleHop+pYAxis.labelsFont()->getHeight()/2,
-                          longestText, pYAxis.labelsFont()->getHeight(), Qt::AlignRight, pYAxis.labels()[i]);
-    }
+    pYAxis.drawVertical(painter, xAxisPosY, yAxisPosX, xAxisLength, scaleHop);
 
     //---------------------------------------Малювання графіка------------------------------------
 

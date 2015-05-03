@@ -94,7 +94,7 @@ void BubbleChart::paint(QPainter *painter)
     int yNumberOfSteps;
     double yStepValue, yGraphMin;
     calculateScale(scaleHeight, yMaxSteps, yMinSteps, yUpperValue, yLoverValue, yNumberOfSteps, yStepValue, yGraphMin);
-    pYAxis.setLabels(populateLabels(yNumberOfSteps, yGraphMin, yStepValue));
+    pYAxis.setLabels(populateLabels(yNumberOfSteps+1, yGraphMin, yStepValue));
 
     int scaleWidth {boundingRect().width()-10-pYAxis.getWidthOfLongestLabel()};
     double xMaxSteps = qFloor(scaleWidth/(pXAxis.labelsFont()->getHeight()*0.66));
@@ -103,48 +103,25 @@ void BubbleChart::paint(QPainter *painter)
     double xStepValue, xGraphMin;
 
     calculateScale(scaleWidth, xMaxSteps, xMinSteps, xUpperValue, xLoverValue, xNumberOfSteps, xStepValue, xGraphMin);
-    pXAxis.setLabels(populateLabels(xNumberOfSteps, xGraphMin, xStepValue));
+    pXAxis.setLabels(populateLabels(xNumberOfSteps+1, xGraphMin, xStepValue));
 
     xMaxSteps = qFloor(scaleWidth/(pXAxis.getWidthOfLongestLabel()*0.66));
     xMinSteps = qFloor(scaleWidth/pXAxis.getWidthOfLongestLabel()*0.4);
     calculateScale(scaleWidth, xMaxSteps, xMinSteps, xUpperValue, xLoverValue, xNumberOfSteps, xStepValue, xGraphMin);
-    pXAxis.setLabels(populateLabels(xNumberOfSteps, xGraphMin, xStepValue));
+    pXAxis.setLabels(populateLabels(xNumberOfSteps+1, xGraphMin, xStepValue));
 
     double yAxisPosX {boundingRect().width()-scaleWidth};
     double xAxisPosY {scaleHeight + xAxisLabelsHeight};
-    double yScaleHop {qFloor(scaleHeight/pYAxis.labels().length())};
-    double xScaleHop {qFloor(scaleWidth/pXAxis.labels().length())};
+    double yScaleHop {qFloor(scaleHeight/yNumberOfSteps)};
+    double xScaleHop {qFloor(scaleWidth/xNumberOfSteps)};
 
     //    //--------------------Малювання осей та сітки-------------------------------
 
     //Малювання осі Х
-    painter->setPen(pXAxis.axisLine()->getPen());
-    painter->drawLine(boundingRect().width()+5,xAxisPosY,
-                      boundingRect().width()-scaleWidth-5,
-                      xAxisPosY);
-    painter->setFont(pXAxis.labelsFont()->getFont());
-    for(int i=0;i<pXAxis.labels().length();i++){
-        painter->drawText(yAxisPosX+i*xScaleHop-xScaleHop/2.0, xAxisPosY, xScaleHop,
-                          xAxisLabelsHeight, Qt::AlignCenter, pXAxis.labels()[i]);
-    }
-    painter->setPen(pXAxis.gridLines()->getPen());
-    for(int i=0;i<pXAxis.labels().length();i++){
-        painter->drawLine(yAxisPosX+(1+i)*xScaleHop, xAxisPosY+3, yAxisPosX+(1+i)*xScaleHop,5);
-    }
+    pXAxis.drawHorizontal(painter, xAxisPosY, yAxisPosX, scaleHeight, xScaleHop);
 
     //Малювання осі У
-    painter->setPen(pYAxis.axisLine()->getPen());
-    painter->drawLine(yAxisPosX, xAxisPosY+5, yAxisPosX, 5);
-    painter->setPen(pYAxis.gridLines()->getPen());
-    for(int i=0;i<pYAxis.labels().length();++i){
-        painter->drawLine(yAxisPosX-3,xAxisPosY-(i+1)*yScaleHop, yAxisPosX+scaleWidth+5,
-                          xAxisPosY-(i+1)*yScaleHop);
-    }
-    painter->setFont(pYAxis.labelsFont()->getFont());
-    for(int i=0;i<pYAxis.labels().length();++i){
-        painter->drawText(yAxisPosX-5-scaleWidth/pXAxis.labels().length(), xAxisPosY-(i+1)*yScaleHop+pYAxis.labelsFont()->getHeight()/2,
-                          scaleWidth/pXAxis.labels().length(), pYAxis.labelsFont()->getHeight(), Qt::AlignRight, pYAxis.labels()[i]);
-    }
+    pYAxis.drawVertical(painter, xAxisPosY, yAxisPosX, scaleWidth, yScaleHop);
 
     //---------------------------------------Малювання графіка------------------------------------
 
