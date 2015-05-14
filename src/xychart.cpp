@@ -156,10 +156,14 @@ void XYChart::calculateDataRange()
             yLoverValue = yLover;
     }
 
-    double offset {(xUpperValue-xLoverValue)*0.1};
+    double offset {(xUpperValue-xLoverValue)*0.01};
+    if(offset==0)
+        offset = 1;
     xUpperValue += offset;
     xLoverValue -= offset;
-    offset = (yUpperValue-yLoverValue)*0.1;
+    offset = (yUpperValue-yLoverValue)*0.01;
+    if(offset==0)
+        offset = 1;
     yUpperValue += offset;
     yLoverValue -= offset;
 }

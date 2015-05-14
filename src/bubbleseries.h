@@ -8,7 +8,7 @@ class BubbleSeries: public XYSeries
 {
     Q_OBJECT
 public:
-    explicit BubbleSeries(QObject *parent=0);
+    explicit BubbleSeries(QQuickItem *parent=0);
     ~BubbleSeries();
 
     Q_PROPERTY(QQmlListProperty<Bubble> data READ data NOTIFY dataChanged)

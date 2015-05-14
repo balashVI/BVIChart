@@ -8,11 +8,23 @@ class XYSeries : public AbstractSeries
 {
     Q_OBJECT
 public:
-    explicit XYSeries(QObject *parent = 0);
+    explicit XYSeries(QQuickItem *parent = 0);
     ~XYSeries();
 
     Q_PROPERTY(QQmlListProperty<ChartPoint> data READ data NOTIFY dataChanged)
     QQmlListProperty<ChartPoint> data();
+
+    /// Добавляє нові точки
+    Q_INVOKABLE void addPoints(QVariantList data);
+
+    /// Видаляє точку
+    Q_INVOKABLE void removePoint(int index);
+
+    /// Видаляє всі точки
+    Q_INVOKABLE void removeAllPoints();
+
+    /// Переміщає точку
+    Q_INVOKABLE void movePoint(int from, int to);
 
     Q_PROPERTY(ChartPen* strokePen READ strokePen WRITE setStrokePen NOTIFY strokePenChanged)
     ChartPen* strokePen() const;

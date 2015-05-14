@@ -13,6 +13,7 @@ Rectangle {
             Layout.fillWidth: true
             series: [
                 XYSeries {
+                    id: chartSeries
                     data: [
                         ChartPoint {
                             x: 0

@@ -1,6 +1,6 @@
 #include "bubbleseries.h"
 
-BubbleSeries::BubbleSeries(QObject *parent):XYSeries(parent)
+BubbleSeries::BubbleSeries(QQuickItem *parent):XYSeries(parent)
 {
 
 }

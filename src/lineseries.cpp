@@ -1,6 +1,6 @@
 #include "lineseries.h"
 
-LineSeries::LineSeries(QObject *parent) : BarSeries(parent), pDrawPoints{true}
+LineSeries::LineSeries(QQuickItem *parent) : BarSeries(parent), pDrawPoints{true}
 {
     pStrokePen->setWidth(3);
 }

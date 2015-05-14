@@ -2,6 +2,7 @@
 #define ABSTRACTSERIES_H
 
 #include <QPainter>
+#include <QQuickItem>
 #include "chartpen.h"
 
 ///
@@ -9,12 +10,12 @@
 ///
 /// Містить основні властивості та функціонал властиві усім серіям графіків
 ///
-class AbstractSeries : public QObject
+class AbstractSeries : public QQuickItem
 {
     Q_OBJECT
 public:
     ///Конструктор класу
-    explicit AbstractSeries(QObject *parent = 0);
+    explicit AbstractSeries(QQuickItem *parent = 0);
 
     ///Назва серії
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)

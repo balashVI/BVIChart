@@ -7,7 +7,7 @@ class LineSeries : public BarSeries
 {
     Q_OBJECT
 public:
-    explicit LineSeries(QObject *parent = 0);
+    explicit LineSeries(QQuickItem *parent = 0);
 
     Q_PROPERTY(bool drawPoints READ drawPoints WRITE setDrawPoints NOTIFY drawPointsChanged)
 

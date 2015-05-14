@@ -8,6 +8,7 @@ class ChartPoint : public QQuickItem
     Q_OBJECT
 public:
     explicit ChartPoint(QQuickItem *parent = 0);
+    explicit ChartPoint(QVariantMap data, QQuickItem *parent = 0);
     ~ChartPoint();
 
     Q_PROPERTY(double x READ x WRITE setX NOTIFY xChanged)

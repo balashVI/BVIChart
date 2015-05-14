@@ -1,6 +1,6 @@
 #include "xyseries.h"
 
-XYSeries::XYSeries(QObject *parent):
+XYSeries::XYSeries(QQuickItem *parent):
     AbstractSeries(parent), pStrokePen{new ChartPen(this)}, pDrawPoints{true}
 {
     pStrokePen->setWidth(3);
@@ -15,6 +15,45 @@ QQmlListProperty<ChartPoint> XYSeries::data()
 {
     return QQmlListProperty<ChartPoint>(this, 0, &XYSeries::appendPoint, &XYSeries::dataListLength,
                                         &XYSeries::pointAt, 0);
+}
+
+void XYSeries::addPoints(QVariantList data)
+{
+    ChartPoint *point;
+    for(int i=0;i<data.length();++i){
+        point = new ChartPoint(data.at(i).toMap(), this);
+        dataList.append(point);
+        connect(point, &ChartPoint::xChanged, this, &XYSeries::calculateDataRange);
+        connect(point, &ChartPoint::yChanged, this, &XYSeries::calculateDataRange);
+    }
+    calculateDataRange();
+    emit dataChanged();
+}
+
+void XYSeries::removePoint(int index)
+{
+    dataList[index]->disconnect();
+    dataList[index]->deleteLater();
+    dataList.removeAt(index);
+    calculateDataRange();
+    emit dataChanged();
+}
+
+void XYSeries::removeAllPoints()
+{
+    while(!dataList.isEmpty()){
+        dataList.first()->disconnect();
+        dataList.first()->deleteLater();
+        dataList.removeFirst();
+    }
+    calculateDataRange();
+    emit dataChanged();
+}
+
+void XYSeries::movePoint(int from, int to)
+{
+    dataList.move(from, to);
+    emit dataChanged();
 }
 
 ChartPen *XYSeries::strokePen() const

@@ -1,6 +1,6 @@
 #include "barseries.h"
 
-BarSeries::BarSeries(QObject *parent) :
+BarSeries::BarSeries(QQuickItem *parent) :
     AbstractSeries(parent), pStrokePen{new ChartPen(this)}
 {
 }
