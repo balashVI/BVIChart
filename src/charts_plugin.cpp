@@ -1,6 +1,5 @@
 #include "charts_plugin.h"
 #include "pieslice.h"
-#include "chartfont.h"
 #include "barchart.h"
 #include "barseries.h"
 #include "categoryaxis.h"
@@ -37,7 +36,6 @@ void ChartsPlugin::registerTypes(const char *uri)
     qmlRegisterType<PolarRAxis>(uri, 1, 0, "PolarRAxis");
     qmlRegisterType<PieSlice>(uri, 1, 0, "PieSlice");
     qmlRegisterType<PieChart>(uri, 1, 0, "PieChart");
-    qmlRegisterType<ChartFont>(uri, 1, 0, "ChartFont");
     qmlRegisterType<BarChart>(uri, 1, 0, "BarChart");
     qmlRegisterType<BarSeries>(uri, 1, 0, "BarSeries");
     qmlRegisterType<CategoryAxis>(uri, 1, 0, "CategoryAxis");

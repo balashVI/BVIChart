@@ -4,6 +4,9 @@
 #include "barchart.h"
 #include "xyseries.h"
 
+///
+/// \brief The XYChart class
+///
 class XYChart : public BarChart
 {
     Q_OBJECT

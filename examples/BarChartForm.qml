@@ -30,7 +30,6 @@ Rectangle {
                     color: "#aa4C996B"
                     strokePen.color: "#3C895B"
                 }
-
             ]
         }
         ChartLegend{

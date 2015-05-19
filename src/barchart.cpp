@@ -5,7 +5,6 @@
 BarChart::BarChart(QQuickPaintedItem *parent) :
     AbstractChart(parent), pXAxis{this}, pYAxis{this}
 {
-    pXAxis.setName("X");
 }
 
 QQmlListProperty<BarSeries> BarChart::series()

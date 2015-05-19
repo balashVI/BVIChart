@@ -4,12 +4,22 @@
 #include <QQuickItem>
 #include <QFontMetrics>
 #include "chartpen.h"
-#include "chartfont.h"
 
+/*! \addtogroup <axisClasses> [Класи осей координат]
+    @{
+*/
+
+///
+/// \brief Клас AbstractAxis
+///
+/// Клас є предком для усіх інших класів осей координат. Він об'єднує в собі
+/// усі властивості та методи, властиві всім осям.
+///
 class AbstractAxis : public QQuickItem
 {
     Q_OBJECT
 public:
+    /// Стандартний конструктор класу
     explicit AbstractAxis(QQuickItem *parent = 0);
 
     ///Містить користувацькі позначки осі
@@ -24,31 +34,16 @@ public:
     ///Містить налаштування шрифту міток осі
     Q_PROPERTY(QFont labelsFont READ labelsFont WRITE setLabelsFont NOTIFY labelsFontChanged)
 
-    ///Містить назву осі
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-
-    ///Містить налаштування фону назви осі
-    Q_PROPERTY(ChartFont* nameFont READ nameFont WRITE setNameFont NOTIFY nameFontChanged)
-
-    ///Керує відображенням назви осі
-    Q_PROPERTY(bool nameVisible READ nameVisible WRITE setNameVisible NOTIFY nameVisibleChanged)
-
     ///Містить колір міток
     Q_PROPERTY(QColor labelsColor READ labelsColor WRITE setLabelsColor NOTIFY labelsColorChanged)
+    void setLabelsColor(const QColor& value);
+    const QColor& labelsColor() const;
 
     ///Вмикає/вимикає відображення підписів осі
     Q_PROPERTY(bool labelsVisible READ labelsVisible WRITE setLabelsVisible NOTIFY labelsVisibleChanged)
-
     void setLabelsVisible(bool value);
     bool labelsVisible() const;
-    void setLabelsColor(const QColor& value);
-    const QColor& labelsColor() const;
-    void setNameVisible(bool value);
-    bool nameVisible() const;
-    void setNameFont(ChartFont* value);
-    ChartFont* nameFont() const;
-    const QString& name() const;
-    void setName(QString value);
+
     void setLabelsFont(QFont &value);
     QFont labelsFont() const;
     void setGridLines(ChartPen* value);
@@ -63,10 +58,8 @@ public:
 protected:
     QList<QString> pLabels;
     ChartPen *pAxisPen, *pGridLines;
-    ChartFont *pNameFont;
     QFont pLabelsFont;
-    QString pName;
-    bool pNameVisible, pLabelsVisible;
+    bool pLabelsVisible;
     QColor pLabelsColor;
 
     void calculateWidthOfLongestLabel(); //Обчислює довжину найдовшого підпису
@@ -86,5 +79,7 @@ signals:
 public slots:
 
 };
+
+/// @}
 
 #endif // ABSTRACTAXIS_H

@@ -3,11 +3,9 @@
 
 AbstractAxis::AbstractAxis(QQuickItem *parent) :
     QQuickItem(parent), pAxisPen{new ChartPen(this)}, pGridLines{new ChartPen(this)},
-    pNameFont{new ChartFont(this)}, pNameVisible{true}, pLabelsVisible{true}
+    pLabelsVisible{true}
 {
     pLabelsFont.setPointSize(9);
-    pNameFont->setPointSize(12);
-    pNameFont->setBold(true);
 }
 
 void AbstractAxis::setLabelsVisible(bool value)
@@ -30,42 +28,6 @@ void AbstractAxis::setLabelsColor(const QColor &value)
 const QColor &AbstractAxis::labelsColor() const
 {
     return pLabelsColor;
-}
-
-void AbstractAxis::setNameVisible(bool value)
-{
-    pNameVisible = value;
-    emit nameVisibleChanged();
-}
-
-bool AbstractAxis::nameVisible() const
-{
-    return pNameVisible;
-}
-
-void AbstractAxis::setNameFont(ChartFont *value)
-{
-    if(value){
-        pNameFont->deleteLater();
-        pNameFont = value;
-        emit nameFontChanged();
-    }
-}
-
-ChartFont *AbstractAxis::nameFont() const
-{
-    return pNameFont;
-}
-
-const QString &AbstractAxis::name() const
-{
-    return pName;
-}
-
-void AbstractAxis::setName(QString value)
-{
-    pName = std::move(value);
-    emit nameChanged();
 }
 
 void AbstractAxis::setLabelsFont(QFont &value)
