@@ -93,12 +93,13 @@ void PolarAreaChart::paint(QPainter *painter)
         QRectF fillRect {boundingRect()};
         QPointF center {fillRect.center()};
         double maxRadius { qMin(fillRect.width(), fillRect.height())*0.5 };
-        maxRadius -= qMax(0.5*pAxis.gridLines()->width(), 0.5*pAxis.labelsFont()->getHeight());
+        int axisLabelsHeight {QFontMetrics(pAxis.labelsFont()).height()};
+        maxRadius -= qMax(0.5*pAxis.gridLines()->width(), 0.5*axisLabelsHeight);
         if(pAxis.drawLabelsBackground())
-            maxRadius -= 0.5*pAxis.labelsFont()->getHeight();
+            maxRadius -= 0.5*axisLabelsHeight;
 
-        double maxSteps { qFloor(maxRadius/(pAxis.labelsFont()->getHeight()*0.66)) };
-        double minSteps { qFloor(maxRadius/pAxis.labelsFont()->getHeight()*0.5) };
+        double maxSteps { qFloor(maxRadius/(axisLabelsHeight*0.66)) };
+        double minSteps { qFloor(maxRadius/axisLabelsHeight*0.5) };
 
         int numberOfSteps;
         double stepValue, graphMin;
@@ -129,7 +130,7 @@ void PolarAreaChart::paint(QPainter *painter)
         }
 
         //Малювання міток
-        painter->setFont(pAxis.labelsFont()->getFont());
+        painter->setFont(pAxis.labelsFont());
         painter->setBrush(QBrush(pAxis.labelsBackgroundColor()));
         QRectF labelRect {QRectF(0,0,0,0)};
         for(QString i:pAxis.labels()){
@@ -143,7 +144,7 @@ void PolarAreaChart::paint(QPainter *painter)
             radius = scaleHop*i;
             labelRect.moveCenter(QPointF(center.x(), center.y()-radius));
             painter->setPen(QColor(pAxis.labelsBackgroundColor()));
-            painter->drawRoundRect(labelRect, pAxis.labelsFont()->getHeight(), pAxis.labelsFont()->getHeight());
+            painter->drawRoundRect(labelRect, axisLabelsHeight, axisLabelsHeight);
             painter->setPen(QColor(pAxis.labelsColor()));
             painter->drawText(labelRect, Qt::AlignCenter, pAxis.labels().at(i));
         }

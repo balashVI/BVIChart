@@ -74,7 +74,7 @@ void BarChart::paint(QPainter *painter)
 {
     painter->setRenderHints(QPainter::Antialiasing, true);
     //Обчислення додаткових параметрів
-    double xAxisLabelsHeight = pXAxis.labelsFont()->getHeight();
+    double xAxisLabelsHeight = QFontMetrics(pXAxis.labelsFont()).height();
     int labelsWidth{pXAxis.getWidthOfLongestLabel()};
     int maxSize {boundingRect().height()};
     maxSize -= xAxisLabelsHeight;
@@ -83,8 +83,9 @@ void BarChart::paint(QPainter *painter)
 
     int scaleHeight{maxSize};
 
-    double maxSteps = qFloor(scaleHeight/(pYAxis.labelsFont()->getHeight()*0.66));
-    double minSteps = qFloor(scaleHeight/pYAxis.labelsFont()->getHeight()*0.5);
+    int yAxisLabelsHeight { QFontMetrics(pYAxis.labelsFont()).height() };
+    double maxSteps { qFloor(scaleHeight/(yAxisLabelsHeight*0.66)) };
+    double minSteps { qFloor(scaleHeight/yAxisLabelsHeight*0.5) };
 
     int numberOfSteps;
     double stepValue, graphMin;
@@ -107,7 +108,7 @@ void BarChart::paint(QPainter *painter)
     painter->drawLine(boundingRect().width()-pXAxis.getWidthOfLongestLabel()/2+5,xAxisPosY,
                       boundingRect().width()-pXAxis.getWidthOfLongestLabel()/2-xAxisLength-5,
                       xAxisPosY);
-    painter->setFont(pXAxis.labelsFont()->getFont());
+    painter->setFont(pXAxis.labelsFont());
     for(int i=0;i<pXAxis.labels().length();i++){
         painter->drawText(yAxisPosX+i*valueHop, xAxisPosY+4, valueHop,
                           xAxisLabelsHeight, Qt::AlignCenter, pXAxis.labels()[i]);

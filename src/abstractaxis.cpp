@@ -3,10 +3,9 @@
 
 AbstractAxis::AbstractAxis(QQuickItem *parent) :
     QQuickItem(parent), pAxisPen{new ChartPen(this)}, pGridLines{new ChartPen(this)},
-    pLabelsFont{new ChartFont(this)}, pNameFont{new ChartFont(this)},
-    pNameVisible{true}, pLabelsVisible{true}
+    pNameFont{new ChartFont(this)}, pNameVisible{true}, pLabelsVisible{true}
 {
-    pLabelsFont->setPointSize(9);
+    pLabelsFont.setPointSize(9);
     pNameFont->setPointSize(12);
     pNameFont->setBold(true);
 }
@@ -69,16 +68,13 @@ void AbstractAxis::setName(QString value)
     emit nameChanged();
 }
 
-void AbstractAxis::setLabelsFont(ChartFont *value)
+void AbstractAxis::setLabelsFont(QFont &value)
 {
-    if(value){
-        pLabelsFont->deleteLater();
-        pLabelsFont = value;
-        emit labelsFontChanged();
-    }
+    pLabelsFont = value;
+    emit labelsFontChanged();
 }
 
-ChartFont *AbstractAxis::labelsFont() const
+QFont AbstractAxis::labelsFont() const
 {
     return pLabelsFont;
 }
@@ -132,7 +128,7 @@ void AbstractAxis::calculateWidthOfLongestLabel()
 {
     int labelWidth;
     widthOfLongestLabel = 0;
-    QFontMetrics fm = QFontMetrics(pLabelsFont->getFont());
+    QFontMetrics fm = QFontMetrics(pLabelsFont);
     for(int i=0;i<pLabels.length();++i){
         labelWidth = fm.width(pLabels[i]);
         if(labelWidth > widthOfLongestLabel)

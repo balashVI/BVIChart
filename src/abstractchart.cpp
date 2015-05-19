@@ -2,7 +2,7 @@
 #include <QDebug>
 
 AbstractChart::AbstractChart(QQuickPaintedItem *parent) :
-    QQuickPaintedItem(parent), pSpacing{10}
+    QQuickPaintedItem(parent)
 {
     setClip(true);
 }
@@ -10,19 +10,6 @@ AbstractChart::AbstractChart(QQuickPaintedItem *parent) :
 QVariantList AbstractChart::generateLegend()
 {
 
-}
-
-void AbstractChart::setSpacing(int value)
-{
-    if(pSpacing!=value){
-        pSpacing = value;
-        emit spacingChanged();
-    }
-}
-
-int AbstractChart::spacing() const
-{
-    return pSpacing;
 }
 
 void AbstractChart::paint(QPainter *painter)

@@ -65,20 +65,21 @@ void XYChart::paint(QPainter *painter)
 {
     painter->setRenderHints(QPainter::Antialiasing, true);
     //Обчислення додаткових параметрів
-    double xAxisLabelsHeight = pXAxis.labelsFont()->getHeight();
+    int xAxisLabelsHeight { QFontMetrics(pXAxis.labelsFont()).height() };
     //    int labelsWidth{pXAxis.getWidthOfMaxLabel()};
 
+    int yAxisLabelsHeight { QFontMetrics(pYAxis.labelsFont()).height() };
     int scaleHeight{boundingRect().height()-5-2.0*xAxisLabelsHeight};
-    double yMaxSteps = qFloor(scaleHeight/(pYAxis.labelsFont()->getHeight()*0.66));
-    double yMinSteps = qFloor(scaleHeight/pYAxis.labelsFont()->getHeight()*0.5);
+    double yMaxSteps = qFloor(scaleHeight/(yAxisLabelsHeight*0.66));
+    double yMinSteps = qFloor(scaleHeight/yAxisLabelsHeight*0.5);
     int yNumberOfSteps;
     double yStepValue, yGraphMin;
     calculateScale(scaleHeight, yMaxSteps, yMinSteps, yUpperValue, yLoverValue, yNumberOfSteps, yStepValue, yGraphMin);
     pYAxis.setLabels(populateLabels(yNumberOfSteps+1, yGraphMin, yStepValue));
 
     int scaleWidth {boundingRect().width()-10-pYAxis.getWidthOfLongestLabel()};
-    double xMaxSteps = qFloor(scaleWidth/(pXAxis.labelsFont()->getHeight()*0.66));
-    double xMinSteps = qFloor(scaleWidth/pXAxis.labelsFont()->getHeight()*0.3);
+    double xMaxSteps = qFloor(scaleWidth/(xAxisLabelsHeight*0.66));
+    double xMinSteps = qFloor(scaleWidth/xAxisLabelsHeight*0.3);
     int xNumberOfSteps;
     double xStepValue, xGraphMin;
 
@@ -156,15 +157,15 @@ void XYChart::calculateDataRange()
             yLoverValue = yLover;
     }
 
-    double offset {(xUpperValue-xLoverValue)*0.01};
-    if(offset==0)
-        offset = 1;
-    xUpperValue += offset;
-    xLoverValue -= offset;
-    offset = (yUpperValue-yLoverValue)*0.01;
-    if(offset==0)
-        offset = 1;
-    yUpperValue += offset;
-    yLoverValue -= offset;
+//    double offset {(xUpperValue-xLoverValue)*0.01};
+//    if(offset==0)
+//        offset = 1;
+//    xUpperValue += offset;
+//    xLoverValue -= offset;
+//    offset = (yUpperValue-yLoverValue)*0.01;
+//    if(offset==0)
+//        offset = 1;
+//    yUpperValue += offset;
+//    yLoverValue -= offset;
 }
 

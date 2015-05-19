@@ -15,10 +15,11 @@ void StandartAxis::drawVertical(QPainter *painter, double xAxisPosY, double yAxi
         painter->drawLine(yAxisPosX-3,xAxisPosY-i*scaleHop, yAxisPosX+axisLength+5,
                           xAxisPosY-i*scaleHop);
     }
-    painter->setFont(pLabelsFont->getFont());
+    painter->setFont(pLabelsFont);
+    int labelsHeight {QFontMetrics(pLabelsFont).height()};
     for(int i=0;i<pLabels.length();++i){
-        painter->drawText(yAxisPosX-10-widthOfLongestLabel, xAxisPosY-i*scaleHop-pLabelsFont->getHeight()/2,
-                          widthOfLongestLabel, pLabelsFont->getHeight(), Qt::AlignRight, pLabels[i]);
+        painter->drawText(yAxisPosX-10-widthOfLongestLabel, xAxisPosY-i*scaleHop-labelsHeight/2,
+                          widthOfLongestLabel, labelsHeight, Qt::AlignRight, pLabels[i]);
     }
 }
 
@@ -31,9 +32,10 @@ void StandartAxis::drawHorizontal(QPainter *painter, double xAxisPosY, double yA
     for(int i=1;i<pLabels.length();i++){
         painter->drawLine(yAxisPosX+i*scaleHop, xAxisPosY+4, yAxisPosX+i*scaleHop,5);
     }
-    painter->setFont(pLabelsFont->getFont());
+    painter->setFont(pLabelsFont);
+    int labelsHeight {QFontMetrics(pLabelsFont).height()};
     for(int i=0;i<pLabels.length();i++){
         painter->drawText(yAxisPosX+i*scaleHop-scaleHop/2.0, xAxisPosY+3, scaleHop,
-                          pLabelsFont->getHeight(), Qt::AlignCenter, pLabels[i]);
+                          labelsHeight, Qt::AlignCenter, pLabels[i]);
     }
 }

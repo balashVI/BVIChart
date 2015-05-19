@@ -6,6 +6,7 @@ Rectangle {
     color: "white"
     RowLayout{
         anchors.fill: parent
+
         BarChart{
             id: barChart
             Layout.fillHeight: true

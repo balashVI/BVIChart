@@ -22,7 +22,7 @@ public:
     Q_PROPERTY(ChartPen* gridLines READ gridLines WRITE setGridLines NOTIFY gridLinesChanged)
 
     ///Містить налаштування шрифту міток осі
-    Q_PROPERTY(ChartFont* labelsFont READ labelsFont WRITE setLabelsFont NOTIFY labelsFontChanged)
+    Q_PROPERTY(QFont labelsFont READ labelsFont WRITE setLabelsFont NOTIFY labelsFontChanged)
 
     ///Містить назву осі
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
@@ -49,8 +49,8 @@ public:
     ChartFont* nameFont() const;
     const QString& name() const;
     void setName(QString value);
-    void setLabelsFont(ChartFont* value);
-    ChartFont* labelsFont() const;
+    void setLabelsFont(QFont &value);
+    QFont labelsFont() const;
     void setGridLines(ChartPen* value);
     ChartPen* gridLines() const;
     void setAxisLine(ChartPen* value);
@@ -63,7 +63,8 @@ public:
 protected:
     QList<QString> pLabels;
     ChartPen *pAxisPen, *pGridLines;
-    ChartFont *pLabelsFont, *pNameFont;
+    ChartFont *pNameFont;
+    QFont pLabelsFont;
     QString pName;
     bool pNameVisible, pLabelsVisible;
     QColor pLabelsColor;
